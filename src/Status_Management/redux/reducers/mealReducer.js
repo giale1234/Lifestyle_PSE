@@ -1,0 +1,53 @@
+import * as ActionType from "./../constants/ActionType";
+
+
+let initialState = {
+    mealList: [],
+    mealEdit: "",
+  };
+
+  const mealReducer = (state = initialState, action) => {
+    switch (action.type) {
+   
+      case "SUBMIT_M":
+        if (action.meal.id) {
+          //UPDATE
+          let index = state.mealList.findIndex(meal => {
+            return meal.id === action.meal.id;
+          });
+          if (index !== -1) {
+            let mealListUpdate = [...state.mealList];
+            mealListUpdate[index] = action.meal;
+            state.mealList = mealListUpdate;
+          }
+        }else{
+            //ADD
+          let mealAdd = { ...action.meal , id: Math.random()};
+          state.mealList = [...state.mealList, mealAdd];
+          }
+        return { ...state };
+  
+      case "EDIT_M":
+          state.mealEdit = action.meal;
+          return { ...state };
+      
+      case "DELETE_M":
+      
+        let index = state.mealList.findIndex(meal => {
+        return meal.id === action.meal.id;
+      });
+      if(index !== -1){
+        let mealListUpdate = [...state.mealList];
+        mealListUpdate.splice(index,1);
+        state.mealList = mealListUpdate;
+      }
+      
+      return { ...state };
+      
+      default:
+        return { ...state };
+    }
+  };
+  
+  export default mealReducer;
+  
