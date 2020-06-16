@@ -1,4 +1,19 @@
-import React, { Component,useState } from "react";
+import React, {Component, useState} from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  processColor,
+  TouchableOpacity,
+  Modal,
+  Alert,
+} from 'react-native';
+import DatePicker from 'react-native-modern-datepicker';
+import {connect} from 'react-redux';
+
+import moment from 'moment';
+
 import {
   Container,
   Header,
@@ -9,78 +24,301 @@ import {
   Left,
   Right,
   Body,
-  SwipeRow
+  SwipeRow,
+} from 'native-base';
 
-} from "native-base";
+import {PieChart} from 'react-native-charts-wrapper';
 
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-  TouchableOpacity,
-  TouchableNativeFeedback,
+class Chart extends React.Component {
+  constructor() {
+    super();
 
-} from "react-native";
-import DatePicker from 'react-native-modern-datepicker';
-import {connect} from 'react-redux';
+    this.state = {
+      selectedMonth: '',
+      modalVisible: false,
+      legend: {
+        enabled: true,
+        textSize: 15,
+        form: 'CIRCLE',
+        // xValuePosition: "OUTSIDE_SLICE",
+        //   yValuePosition: "OUTSIDE_SLICE",
+        horizontalAlignment: 'RIGHT',
+        verticalAlignment: 'CENTER',
+        orientation: 'VERTICAL',
+        wordWrapEnabled: true,
+      },
 
-import moment from 'moment';
+      dataIncome: {
+        dataSets: [
+          {
+            values: [
+              {value: 45, label: 'Sandwiches'},
+              {value: 21, label: 'Salads'},
+              {value: 15, label: 'Soup'},
+              {value: 9, label: 'Beverages'},
+              {value: 15, label: 'Desserts'},
+            ],
+            label: '',
+            config: {
+              colors: [
+                processColor('#FFD000'),
+                processColor('#FE5972'),
+                processColor('#87DFB0'),
+                processColor('#45C1EA'),
+                processColor('#EE7720'),
+              ],
+              valueTextSize: 20,
+              valueTextColor: processColor('green'),
+              sliceSpace: 5,
+              selectionShift: 13,
+              valueFormatter: "#.#'%'",
+              valueLineColor: processColor('green'),
+              valueLinePart1Length: 0.5,
+            },
+          },
+          
+        ],
+      },
+      dataExpense: {
+        dataSets: [
+          {
+            values: [
+              {value: 45, label: 'Sandwiches'},
+              {value: 21, label: 'Salads'},
+              {value: 15, label: 'Soup'},
+              {value: 9, label: 'Beverages'},
+              {value: 15, label: 'Desserts'},
+            ],
+            label: '',
+            config: {
+              colors: [
+                processColor('#FFD000'),
+                processColor('#FE5972'),
+                processColor('#87DFB0'),
+                processColor('#45C1EA'),
+                processColor('#EE7720'),
+              ],
+              valueTextSize: 20,
+              valueTextColor: processColor('green'),
+              sliceSpace: 5,
+              selectionShift: 13,
+              valueFormatter: "#.#'%'",
+              valueLineColor: processColor('green'),
+              valueLinePart1Length: 0.5,
+            },
+          },
+          
+        ],
+      },
+      highlights: [{x: 2}],
+      description: {
+        text: '',
+        textSize: 15,
+        textColor: processColor('darkgray'),
+      },
+      animation: {
+        durationX: 1000,
+        durationY: 1000,
+        // easingX: 'EaseInCirc',
+        random: Math.random(),
+      },
+    };
+  }
+  componentDidMount(){
+    console.log("componentDidMount")
+    this.chart();
+  }
+  componentDidUpdate(prevProps,prevState) {
+    console.log("componentDidUpdate")
+    // Typical usage (don't forget to compare props):
+    if (this.state.selectedMonth !== prevState.selectedMonth ||this.props.budgetList !== prevProps.budgetList) {
+      this.chart();
+    }
+  }
+  componentWillMount() {
+    console.log("componentDidUpdate")
+    var selectedMonth = moment().format('YYYY-MM');
+    this.setState({
+      selectedMonth,
+    });
+  }
+  handleSelect(event) {
+    let entry = event.nativeEvent;
+    if (entry == null) {
+      this.setState({...this.state, selectedEntry: null});
+    } else {
+      this.setState({...this.state, selectedEntry: JSON.stringify(entry)});
+    }
 
-class Chart extends Component {
- constructor(props){
-   super(props);
-   this.state = {
-    selectedMonth:'',
-    modalVisible:false
-   }
- }
- componentWillMount() {
-  var selectedMonth = moment().format("YYYY-MM");
-  this.setState({
-    selectedMonth
-  });
-}
+    console.log(event.nativeEvent);
+  }
+  chart = () => {
+    const {budgetList} = this.props;
+    const {selectedMonth} = this.state;
+
+    let indexIncome = {};
+    let indexExpense = {};
+    let valueChartIncome = [];
+    let valueChartExpense = [];
+    
+    budgetList.map(budget => {
+      if (
+       
+        selectedMonth ===
+          budget.date
+            .split('-')
+            .reverse()
+            .join('-')
+            .split('-', 2)
+            .join('-')
+      ) {
+        if(budget.type === "Income"){
+          if (!indexIncome[budget.checkedIndex]) {
+            indexIncome[budget.checkedIndex] = {
+              value: Number(budget.amount),
+              label: budget.category,
+            };
+          } else {
+            indexIncome[budget.checkedIndex].value =
+              indexIncome[budget.checkedIndex].value + Number(budget.amount);
+          }
+        }else {
+          if (!indexExpense[budget.checkedIndex]) {
+            indexExpense[budget.checkedIndex] = {
+              value: Number(budget.amount),
+              label: budget.category,
+            };
+          } else {
+            indexExpense[budget.checkedIndex].value =
+            indexExpense[budget.checkedIndex].value + Number(budget.amount);
+          }
+        }
+      }
+    });
+ 
+   
+    Object.keys(indexIncome).forEach(key => {
+      valueChartIncome.push({
+        value: indexIncome[key].value,
+        label: indexIncome[key].label,
+      });
+    });
+    Object.keys(indexExpense).forEach(key => {
+      valueChartExpense.push({
+        value: indexExpense[key].value,
+        label: indexExpense[key].label,
+      });
+    });
+    
+    this.setState({
+      dataIncome: {
+        dataSets: [
+          {
+           
+            values: valueChartIncome,
+            label: '',
+            config: {
+              colors: [
+                processColor('#FFD000'),
+                processColor('#FE5972'),
+                processColor('#87DFB0'),
+                processColor('#45C1EA'),
+                processColor('#EE7720'),
+              ],
+              valueTextSize: 20,
+              valueTextColor: processColor('green'),
+              sliceSpace: 5,
+              selectionShift: 13,
+              valueFormatter: "#.#'%'",
+              valueLineColor: processColor('green'),
+              valueLinePart1Length: 0.5,
+            },
+          },
+        ],
+      },
+      dataExpense: {
+        dataSets: [
+          {
+            values: valueChartExpense,
+            label: '',
+            config: {
+              colors: [
+                processColor('#FFD000'),
+                processColor('#FE5972'),
+                processColor('#87DFB0'),
+                processColor('#45C1EA'),
+                processColor('#EE7720'),
+              ],
+              valueTextSize: 20,
+              valueTextColor: processColor('green'),
+              sliceSpace: 5,
+              selectionShift: 13,
+              valueFormatter: "#.#'%'",
+              valueLineColor: processColor('green'),
+              valueLinePart1Length: 0.5,
+            },
+          },
+        ],
+      },
+    });
+  };
 
   render() {
-   
-    const {budgetList}  = this.props;
+    const {budgetList} = this.props;
+    console.log("budgetList prop",budgetList)
+    // {this.chart()}
     const {selectedMonth} = this.state;
-    function calIncome() {
-        var incomeTotal = 0;
-        {
-          budgetList.map(budget => {
 
-            if (budget.type === 'Income' && selectedMonth === budget.date.split('-').reverse().join('-').split("-", 2).join('-')
-            ) {
-              incomeTotal += Number(budget.amount);
-            }
-          });
-        }
-        return incomeTotal;
+    function calIncome() {
+      var incomeTotal = 0;
+      {
+        budgetList.map(budget => {
+          if (
+            budget.type === 'Income' &&
+            selectedMonth ===
+              budget.date
+                .split('-')
+                .reverse()
+                .join('-')
+                .split('-', 2)
+                .join('-')
+          ) {
+            incomeTotal += Number(budget.amount);
+          }
+        });
       }
-      function calExpense() {
-        var expenseTotal = 0;
-        {
-          budgetList.map(budget => {
-            if (budget.type === 'Expense' && selectedMonth === budget.date.split('-').reverse().join('-').split("-", 2).join('-')) {
-              expenseTotal += Number(budget.amount);
-            }
-          });
-        }
-        return expenseTotal;
+      return incomeTotal;
+    }
+    function calExpense() {
+      var expenseTotal = 0;
+      {
+        budgetList.map(budget => {
+          if (
+            budget.type === 'Expense' &&
+            selectedMonth ===
+              budget.date
+                .split('-')
+                .reverse()
+                .join('-')
+                .split('-', 2)
+                .join('-')
+          ) {
+            expenseTotal += Number(budget.amount);
+          }
+        });
       }
-      function calTotal() {
-        var income = calIncome();
-        var expense = calExpense();
-        var total = Number(income) - Number(expense);
-        return total;
-      }
+      return expenseTotal;
+    }
+    function calTotal() {
+      var income = calIncome();
+      var expense = calExpense();
+      var total = Number(income) - Number(expense);
+      return total;
+    }
     return (
-      <Container style={styles.container}>
-         <Header>
+      <View style={{flex: 1, backgroundColor:"white"}}>
+      
+        <Header>
           <Left style={{flex: 1}}>
             <Button
               transparent
@@ -96,224 +334,231 @@ class Chart extends Component {
             <Button
               transparent
               onPress={() => this.props.navigation.navigate('MainTracker')}>
-              <Text style={{fontWeight: 'bold', color:"white", fontSize:18}}>Back</Text>
+              <Text style={{fontWeight: 'bold', color: 'white', fontSize: 18}}>
+                Back
+              </Text>
             </Button>
           </Right>
         </Header>
-
-        <Content padder>
-
         <Modal
-
-        animationType="slide"
-        transparent={true}
-        visible={this.state.modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-
-        }}
-
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-
-            <DatePicker
-              current={this.state.selectedMonth.split("-").join(" ")}
-              mode="monthYear"
-              selectorStartingYear={2000}
-              onMonthYearChange={selectedDate => this.setState({selectedMonth:selectedDate.split(" ").join("-")})}
-              style={styles.datePicker}
-            />
-             <TouchableOpacity
-             style={styles.openButton}
-              onPress={() => {
-               this.setState({modalVisible:false})
-              }}
-            >
-              <Text style={styles.textStyle}>     OK      </Text>
-            </TouchableOpacity>
-
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <DatePicker
+                current={this.state.selectedMonth.split('-').join(' ')}
+                mode="monthYear"
+                selectorStartingYear={2000}
+                onMonthYearChange={selectedDate =>
+                  this.setState({
+                    selectedMonth: selectedDate.split(' ').join('-'),
+                  })
+                }
+                style={styles.datePicker}
+              />
+              <TouchableOpacity
+                style={styles.openButton}
+                onPress={() => {
+                  this.setState({modalVisible: false});
+                }}>
+                <Text style={styles.textStyle}> OK </Text>
+              </TouchableOpacity>
+            </View>
           </View>
+        </Modal>
+        <TouchableOpacity
+          style={styles.openButton}
+          onPress={() => {
+            this.setState({modalVisible: true});
+          }}>
+          <Text style={styles.textStyle}>
+            {this.state.selectedMonth
+              .split('-')
+              .reverse()
+              .join('-')}
+          </Text>
+        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+          }}>
+          <Text style={styles.text}>Income </Text>
+          <Text style={styles.text}>Expense</Text>
+          <Text style={styles.text}>Total </Text>
         </View>
-      </Modal>
-      <TouchableOpacity
-        style={styles.openButton}
-        onPress={() => {
-          this.setState({modalVisible:true})
-        }}
-      >
-        <Text style={styles.textStyle}>{this.state.selectedMonth.split("-").reverse().join("-")}</Text>
-      </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+          }}>
+          <Text style={styles.incomeText}> {calIncome()}</Text>
+          <Text style={styles.expenseText}> {calExpense()}</Text>
+          <Text style={styles.totalText}>{calTotal()}</Text>
+        </View>
 
-      <View
-            style={{
-
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            <Text style={styles.text}>Income </Text>
-            <Text style={styles.text}>Expense</Text>
-            <Text style={styles.text}>Total </Text>
-          </View>
-          <View
-            style={{
-
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            <Text style={styles.incomeText}> {calIncome()}</Text>
-            <Text style={styles.expenseText}> {calExpense()}</Text>
-            <Text style={styles.totalText}>{calTotal()}</Text>
-          </View>
-
-        </Content>
-      </Container>
+      
+       
+        
+           <View style={{alignItems:"center", margin:20}}>
+           <Text style={{fontSize:20, color:"red", fontWeight:"bold"}}>INCOME</Text>
+           </View>
+            <PieChart
+            style={styles.chart}
+            logEnabled={true}
+            chartBackgroundColor={processColor('white')}
+            chartDescription={this.state.description}
+            data={this.state.dataIncome}
+            legend={this.state.legend}
+            highlights={this.state.highlights}
+            entryLabelColor={processColor('green')}
+            entryLabelTextSize={20}
+            drawEntryLabels={true}
+            rotationEnabled={true}
+            // rotationAngle={45}
+            usePercentValues={true}
+            styledCenterText={{
+              text: 'Pie center text!',
+              color: processColor('pink'),
+              size: 20,
+            }}
+            centerTextRadiusPercent={100}
+            holeRadius={40}
+            holeColor={processColor('#f0f0f0')}
+            transparentCircleRadius={45}
+            transparentCircleColor={processColor('#f0f0f088')}
+            // maxAngle={350}
+            onSelect={this.handleSelect.bind(this)}
+            onChange={event => console.log(event.nativeEvent)}
+            animation={this.state.animation}
+          />
+       <View style={{alignItems:"center", margin:20}}>
+           <Text style={{fontSize:20, color:"red", fontWeight:"bold"}}>EXPENSE</Text>
+           </View>
+          <PieChart
+            style={styles.chart}
+            logEnabled={true}
+            chartBackgroundColor={processColor('white')}
+            chartDescription={this.state.description}
+            data={this.state.dataExpense}
+            legend={this.state.legend}
+            highlights={this.state.highlights}
+            entryLabelColor={processColor('green')}
+            entryLabelTextSize={20}
+            drawEntryLabels={true}
+            rotationEnabled={true}
+            // rotationAngle={45}
+            usePercentValues={true}
+            styledCenterText={{
+              text: 'Pie center text!',
+              color: processColor('pink'),
+              size: 20,
+            }}
+            centerTextRadiusPercent={100}
+            holeRadius={40}
+            holeColor={processColor('#f0f0f0')}
+            transparentCircleRadius={45}
+            transparentCircleColor={processColor('#f0f0f088')}
+            // maxAngle={350}
+            onSelect={this.handleSelect.bind(this)}
+            onChange={event => console.log(event.nativeEvent)}
+            animation={this.state.animation}
+          />
+        </View>
+    
     );
   }
 }
+
 const mapStateToProps = state => {
   return {
     budgetList: state.budgetReducer.budgetList,
-    budgetEdit: state.budgetReducer.budgetEdit   
+    budgetEdit: state.budgetReducer.budgetEdit,
   };
 };
 export default connect(mapStateToProps, null)(Chart);
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFF"
+    flex: 1,
+    backgroundColor:"white"
   },
+  chart: {
+    flex: 1,
+  },
+  // container: {
+  //   backgroundColor: "#FFF"
+  // },
   headerText: {
     fontWeight: 'bold',
     justifyContent: 'center',
-
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5
+    elevation: 5,
   },
   openButton: {
-    backgroundColor:"orange",
-    borderWidth:3,
-    borderColor:"#222224",
-    borderColor:5,
+    backgroundColor: 'orange',
+    borderWidth: 3,
+    borderColor: '#222224',
+    borderColor: 5,
     padding: 10,
     elevation: 2,
-
   },
   textStyle: {
-    fontSize:18,
+    fontSize: 18,
     // fontWeight: "bold",
-    textAlign: "center"
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
+    textAlign: 'center',
   },
-  datePicker:{
-     width:300
+  datePicker: {
+    width: 300,
   },
-  noteText:{
+  noteText: {
     fontSize: 15,
-  }
-  ,text: {
+  },
+  text: {
     fontSize: 20,
     color: 'grey',
   },
   incomeText: {
     fontSize: 20,
-    fontWeight:"bold",
+    fontWeight: 'bold',
     color: 'green',
   },
   expenseText: {
     fontSize: 20,
-    fontWeight:"bold",
+    fontWeight: 'bold',
 
     color: 'red',
   },
   totalText: {
     fontSize: 20,
-    fontWeight:"bold",
+    fontWeight: 'bold',
     color: 'orange',
-  }
+  },
 });
-
-// import {
-//   LineChart,
-//   BarChart,
-//   PieChart,
-//   ProgressChart,
-//   ContributionGraph,
-//   StackedBarChart
-// } from "react-native-chart-kit";
-// import React, { Component } from 'react'
-// import {View, Text, Dimensions} from "react-native"
-// export default class Chart extends Component {
-//   render() {
-//     return (
-//       <View>
-//       <Text>Bezier Line Chart</Text>
-//       <LineChart
-//         data={{
-//           labels: ["January", "February", "March", "April", "May", "June"],
-//           datasets: [
-//             {
-//               data: [
-//                 Math.random() * 100,
-//                 Math.random() * 100,
-//                 Math.random() * 100,
-//                 Math.random() * 100,
-//                 Math.random() * 100,
-//                 Math.random() * 100
-//               ]
-//             }
-//           ]
-//         }}
-//         width={Dimensions.get("window").width} // from react-native
-//         height={220}
-//         yAxisLabel="$"
-//         yAxisSuffix="k"
-//         yAxisInterval={1} // optional, defaults to 1
-//         chartConfig={{
-//           backgroundColor: "#e26a00",
-//           backgroundGradientFrom: "#fb8c00",
-//           backgroundGradientTo: "#ffa726",
-//           decimalPlaces: 2, // optional, defaults to 2dp
-//           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-//           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-//           style: {
-//             borderRadius: 16
-//           },
-//           propsForDots: {
-//             r: "6",
-//             strokeWidth: "2",
-//             stroke: "#ffa726"
-//           }
-//         }}
-//         bezier
-//         style={{
-//           marginVertical: 8,
-//           borderRadius: 16
-//         }}
-//       />
-//     </View>
-//     )
-//   }
-// }

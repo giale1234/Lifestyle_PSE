@@ -126,7 +126,7 @@ const DATA = [
         date: currentDate,
         note: '',
         amount: '',
-        type:'Income',
+        type:'Expense',
         category: '',
         categoryImage: '',
         checkedIndex: '',
