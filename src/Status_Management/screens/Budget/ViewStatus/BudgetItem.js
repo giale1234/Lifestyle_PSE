@@ -169,7 +169,7 @@ class BudgetItem extends Component {
     if (firstItemInDay) {
       return (
           <>
-        <View style={{backgroundColor:"pink",  width: 320,margin: 2,borderColor:"grey", borderWidth:1, height:40}}>
+        <View style={{backgroundColor:"#E4EEE0",  width: 320,margin: 2,borderColor:"grey", borderWidth:1, height:50, justifyContent:"center"}}>
           <View
             style={{
               flexDirection: 'row',
@@ -268,8 +268,8 @@ const styles = StyleSheet.create({
     height: 90,
   },
   image: {
-    height: 52,
-    width: 52,
+    height: 45,
+    width: 45,
     marginLeft: 15,
   },
   categoryText: {
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     color: 'orange',
   },
   text: {
-    fontSize: 13,
+    fontSize: 15,
     color: 'grey',
   },
 
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     borderColor: 'grey',
-    borderWidth: 1,
+    borderWidth: 0.7,
     justifyContent: 'center',
     height: 60,
     flexDirection: 'row',

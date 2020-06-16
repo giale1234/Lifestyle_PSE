@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Picker
+  Picker,
+  
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment'; 
@@ -57,6 +58,8 @@ import { Slider } from 'react-native-elements';
       carb: 0,
       protein:0,
       fat:0, 
+      filePath: {},
+      isUpload: false
     };
   
   }
@@ -89,11 +92,52 @@ import { Slider } from 'react-native-elements';
       date:currentDate 
     });
   }
-  uploadImage = () => {
-    return (
+  chooseFile = () => {
+    var options = {
+      title: 'Select Image',
+      customButtons: [
+        { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          filePath: source,
+          isUpload : true
+        });
+      }
+    });
 
-      <Image source={this.state.avatarSource} style={styles.uploadAvatar} />
-    )
+  };
+  showImage = () => {
+    if (this.state.isUpload === true){
+      return(
+       <View>
+          <Image
+       
+       source={{ uri: this.state.filePath.uri }}
+       style={{ width: 370, height: 250, marginTop:40 }}
+       s
+       />
+       </View>
+      )
+    }
+   
   }
   handleOnChange = (text,name) => {
     this.setState({
@@ -125,26 +169,7 @@ import { Slider } from 'react-native-elements';
   render() {
     var {mealEdit} = this.props;
      console.log("mealEdit", this.props.mealEdit)
-    ImagePicker.showImagePicker(options, (response) => {
-        console.log('Response = ', response);
-      
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-        } else {
-          const source = { uri: response.uri };
-      
-          // You can also display the image using data:
-          // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-      
-          this.setState({
-            avatarSource: source,
-          });
-        }
-      });
+    
    
     return (
       <Content padder>
@@ -197,11 +222,20 @@ import { Slider } from 'react-native-elements';
           </Item>
         </Form>
         
-
-              <TouchableOpacity onPress={this.uploadImage}>
-                <Text>Upload image</Text>
-              </TouchableOpacity>
-
+        <View style={styles.container}>
+        <View style={styles.container}>
+       
+          {this.showImage()}
+          
+         
+        <View  style={{flexDirection:"row", margin:20, alignItems:"center"}}>
+          <Label>Image: </Label>
+        <TouchableOpacity onPress={this.chooseFile.bind(this)} style={{borderColor:"grey", borderWidth:1, borderRadius:5, height:35, width:100, alignItems:"center", justifyContent:"center", marginLeft:20}}> 
+            <Text >Choose File</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
+      </View>
 
 
         

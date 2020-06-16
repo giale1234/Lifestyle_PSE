@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Modal,
   Alert,
+  Image,
 } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
 import {connect} from 'react-redux';
@@ -28,6 +29,7 @@ import {
 } from 'native-base';
 
 import {PieChart} from 'react-native-charts-wrapper';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class Chart extends React.Component {
   constructor() {
@@ -76,7 +78,6 @@ class Chart extends React.Component {
               valueLinePart1Length: 0.5,
             },
           },
-          
         ],
       },
       dataExpense: {
@@ -107,7 +108,6 @@ class Chart extends React.Component {
               valueLinePart1Length: 0.5,
             },
           },
-          
         ],
       },
       highlights: [{x: 2}],
@@ -122,21 +122,26 @@ class Chart extends React.Component {
         // easingX: 'EaseInCirc',
         random: Math.random(),
       },
+      valueChartIncome: [],
+      valueChartExpense: [],
     };
   }
-  componentDidMount(){
-    console.log("componentDidMount")
+  componentDidMount() {
+    console.log('componentDidMount');
     this.chart();
   }
-  componentDidUpdate(prevProps,prevState) {
-    console.log("componentDidUpdate")
+  componentDidUpdate(prevProps, prevState) {
+    console.log('componentDidUpdate');
     // Typical usage (don't forget to compare props):
-    if (this.state.selectedMonth !== prevState.selectedMonth ||this.props.budgetList !== prevProps.budgetList) {
+    if (
+      this.state.selectedMonth !== prevState.selectedMonth ||
+      this.props.budgetList !== prevProps.budgetList
+    ) {
       this.chart();
     }
   }
   componentWillMount() {
-    console.log("componentDidUpdate")
+    console.log('componentDidUpdate');
     var selectedMonth = moment().format('YYYY-MM');
     this.setState({
       selectedMonth,
@@ -160,61 +165,62 @@ class Chart extends React.Component {
     let indexExpense = {};
     let valueChartIncome = [];
     let valueChartExpense = [];
-    
+
     budgetList.map(budget => {
       if (
-       
         selectedMonth ===
-          budget.date
-            .split('-')
-            .reverse()
-            .join('-')
-            .split('-', 2)
-            .join('-')
+        budget.date
+          .split('-')
+          .reverse()
+          .join('-')
+          .split('-', 2)
+          .join('-')
       ) {
-        if(budget.type === "Income"){
+        if (budget.type === 'Income') {
           if (!indexIncome[budget.checkedIndex]) {
             indexIncome[budget.checkedIndex] = {
               value: Number(budget.amount),
               label: budget.category,
+              categoryImage: budget.categoryImage,
             };
           } else {
             indexIncome[budget.checkedIndex].value =
               indexIncome[budget.checkedIndex].value + Number(budget.amount);
           }
-        }else {
+        } else {
           if (!indexExpense[budget.checkedIndex]) {
             indexExpense[budget.checkedIndex] = {
               value: Number(budget.amount),
               label: budget.category,
+              categoryImage: budget.categoryImage,
             };
           } else {
             indexExpense[budget.checkedIndex].value =
-            indexExpense[budget.checkedIndex].value + Number(budget.amount);
+              indexExpense[budget.checkedIndex].value + Number(budget.amount);
           }
         }
       }
     });
- 
-   
+
     Object.keys(indexIncome).forEach(key => {
       valueChartIncome.push({
         value: indexIncome[key].value,
         label: indexIncome[key].label,
+        categoryImage: indexIncome[key].categoryImage,
       });
     });
     Object.keys(indexExpense).forEach(key => {
       valueChartExpense.push({
         value: indexExpense[key].value,
         label: indexExpense[key].label,
+        categoryImage: indexExpense[key].categoryImage,
       });
     });
-    
+
     this.setState({
       dataIncome: {
         dataSets: [
           {
-           
             values: valueChartIncome,
             label: '',
             config: {
@@ -260,12 +266,14 @@ class Chart extends React.Component {
           },
         ],
       },
+      valueChartIncome,
+      valueChartExpense,
     });
   };
 
   render() {
     const {budgetList} = this.props;
-    console.log("budgetList prop",budgetList)
+    console.log('budgetList prop', budgetList);
     // {this.chart()}
     const {selectedMonth} = this.state;
 
@@ -316,8 +324,8 @@ class Chart extends React.Component {
       return total;
     }
     return (
-      <View style={{flex: 1, backgroundColor:"white"}}>
-      
+ 
+      <Container style={styles.container}>
         <Header>
           <Left style={{flex: 1}}>
             <Button
@@ -340,6 +348,7 @@ class Chart extends React.Component {
             </Button>
           </Right>
         </Header>
+        <Content padder> 
         <Modal
           animationType="slide"
           transparent={true}
@@ -401,75 +410,109 @@ class Chart extends React.Component {
           <Text style={styles.totalText}>{calTotal()}</Text>
         </View>
 
-      
-       
-        
-           <View style={{alignItems:"center", margin:20}}>
-           <Text style={{fontSize:20, color:"red", fontWeight:"bold"}}>INCOME</Text>
-           </View>
-            <PieChart
-            style={styles.chart}
-            logEnabled={true}
-            chartBackgroundColor={processColor('white')}
-            chartDescription={this.state.description}
-            data={this.state.dataIncome}
-            legend={this.state.legend}
-            highlights={this.state.highlights}
-            entryLabelColor={processColor('green')}
-            entryLabelTextSize={20}
-            drawEntryLabels={true}
-            rotationEnabled={true}
-            // rotationAngle={45}
-            usePercentValues={true}
-            styledCenterText={{
-              text: 'Pie center text!',
-              color: processColor('pink'),
-              size: 20,
-            }}
-            centerTextRadiusPercent={100}
-            holeRadius={40}
-            holeColor={processColor('#f0f0f0')}
-            transparentCircleRadius={45}
-            transparentCircleColor={processColor('#f0f0f088')}
-            // maxAngle={350}
-            onSelect={this.handleSelect.bind(this)}
-            onChange={event => console.log(event.nativeEvent)}
-            animation={this.state.animation}
-          />
-       <View style={{alignItems:"center", margin:20}}>
-           <Text style={{fontSize:20, color:"red", fontWeight:"bold"}}>EXPENSE</Text>
-           </View>
-          <PieChart
-            style={styles.chart}
-            logEnabled={true}
-            chartBackgroundColor={processColor('white')}
-            chartDescription={this.state.description}
-            data={this.state.dataExpense}
-            legend={this.state.legend}
-            highlights={this.state.highlights}
-            entryLabelColor={processColor('green')}
-            entryLabelTextSize={20}
-            drawEntryLabels={true}
-            rotationEnabled={true}
-            // rotationAngle={45}
-            usePercentValues={true}
-            styledCenterText={{
-              text: 'Pie center text!',
-              color: processColor('pink'),
-              size: 20,
-            }}
-            centerTextRadiusPercent={100}
-            holeRadius={40}
-            holeColor={processColor('#f0f0f0')}
-            transparentCircleRadius={45}
-            transparentCircleColor={processColor('#f0f0f088')}
-            // maxAngle={350}
-            onSelect={this.handleSelect.bind(this)}
-            onChange={event => console.log(event.nativeEvent)}
-            animation={this.state.animation}
-          />
+        <View style={{alignItems: 'center', margin: 20}}>
+          <Text style={{fontSize: 20, color: 'red', fontWeight: 'bold'}}>
+            EXPENSE
+          </Text>
         </View>
-    
+        <PieChart
+          style={styles.chart}
+          logEnabled={true}
+          chartBackgroundColor={processColor('white')}
+          chartDescription={this.state.description}
+          data={this.state.dataExpense}
+          legend={this.state.legend}
+          highlights={this.state.highlights}
+          entryLabelColor={processColor('green')}
+          entryLabelTextSize={20}
+          drawEntryLabels={true}
+          rotationEnabled={true}
+          // rotationAngle={45}
+          usePercentValues={true}
+          styledCenterText={{
+            text: 'Pie center text!',
+            color: processColor('pink'),
+            size: 20,
+          }}
+          centerTextRadiusPercent={100}
+          holeRadius={40}
+          holeColor={processColor('#f0f0f0')}
+          transparentCircleRadius={45}
+          transparentCircleColor={processColor('#f0f0f088')}
+          // maxAngle={350}
+          onSelect={this.handleSelect.bind(this)}
+          onChange={event => console.log(event.nativeEvent)}
+          animation={this.state.animation}
+        />
+
+      {this.state.valueChartExpense.map(item => {
+          return (
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-around', borderColor:"grey", borderWidth:0.5, height:50, alignItems:"center"}}>
+              <Image
+                source={item.categoryImage}
+                style={{height: 40, width: 40}}
+              />
+              <Text style={{fontSize:15}}>{item.label}</Text>
+              <Text style={{fontSize:15, fontWeight:"bold", color:"red"}}>{item.value}</Text>
+            </View>
+          );
+        })}
+
+        <View style={{alignItems: 'center', margin: 20}}>
+          <Text style={{fontSize: 20, color: 'red', fontWeight: 'bold'}}>
+            INCOME
+          </Text>
+        </View>
+        
+        <PieChart
+          style={styles.chart}
+          logEnabled={true}
+          chartBackgroundColor={processColor('white')}
+          chartDescription={this.state.description}
+          data={this.state.dataIncome}
+          legend={this.state.legend}
+          highlights={this.state.highlights}
+          entryLabelColor={processColor('green')}
+          entryLabelTextSize={20}
+          drawEntryLabels={true}
+          rotationEnabled={true}
+          // rotationAngle={45}
+          usePercentValues={true}
+          styledCenterText={{
+            text: 'Pie center text!',
+            color: processColor('pink'),
+            size: 20,
+          }}
+          centerTextRadiusPercent={100}
+          holeRadius={40}
+          holeColor={processColor('#f0f0f0')}
+          transparentCircleRadius={45}
+          transparentCircleColor={processColor('#f0f0f088')}
+          // maxAngle={350}
+          onSelect={this.handleSelect.bind(this)}
+          onChange={event => console.log(event.nativeEvent)}
+          animation={this.state.animation}
+        />
+
+        {this.state.valueChartIncome.map(item => {
+          return (
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-around', borderColor:"grey", borderWidth:0.5, height:50, alignItems:"center"}}>
+              <Image
+                source={item.categoryImage}
+                style={{height: 40, width: 40}}
+              />
+              <Text  style={{fontSize:15}}>{item.label}</Text>
+              <Text style={{fontSize:15, fontWeight:"bold", color:"green"}}>{item.value}</Text>
+            </View>
+          );
+        })}
+
+  
+        </Content>
+  </Container>
+
     );
   }
 }
@@ -485,10 +528,10 @@ export default connect(mapStateToProps, null)(Chart);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"white"
+    backgroundColor: 'white',
   },
   chart: {
-    flex: 1,
+    height:300, width:300
   },
   // container: {
   //   backgroundColor: "#FFF"

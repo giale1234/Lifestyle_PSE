@@ -79,7 +79,7 @@ class ViewStatus extends Component {
           </Left>
 
           <Body style={{flex: 1}}>
-            <Title style={styles.headerText}>Budget</Title>
+            <Title style={styles.headerText}>Health</Title>
           </Body>
           <Right style={{flex: 1}}>
             <Button
