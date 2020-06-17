@@ -3,7 +3,7 @@ import * as ActionType from "./../constants/ActionType";
 
 let initialState = {
     exerciseList: [],
-    exerciseEdit: "",
+    exerciseEdit: null,
   };
 
   const exerciseReducer = (state = initialState, action) => {
@@ -19,12 +19,13 @@ let initialState = {
             let exerciseListUpdate = [...state.exerciseList];
             exerciseListUpdate[index] = action.exercise;
             state.exerciseList = exerciseListUpdate;
+            
           }
         }else{
             // ADD
           let exerciseAdd = { ...action.exercise , id: Math.random()};
           state.exerciseList = [...state.exerciseList, exerciseAdd];
-          }
+         }
         return { ...state };
   
       case "EDIT_E":

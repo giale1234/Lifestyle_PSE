@@ -33,8 +33,7 @@ class ViewStatus extends Component {
       date: '',
       totalTime: 0,
       // active:false
-      id: '',
-      
+      id: '', 
       duration: 0,  
       category: '',
     };
@@ -52,8 +51,9 @@ class ViewStatus extends Component {
       numOfBottle:id
     })
   }
+ 
   render() {
-  
+    
     const {exerciseList, mealList} = this.props;
     var totalTime = 0;
     var totalCarb = 0;
@@ -376,7 +376,9 @@ class ViewStatus extends Component {
 
                 <TouchableOpacity 
                 // onPress={()=>this.props.deleteExercise(exercise)}
-                onPress={()=>{this.props.editExercise(exercise); this.props.navigation.push("Exercise")}}
+                onPress={()=>{this.props.editExercise(exercise); 
+                  this.props.navigation.push("Exercise")
+                }}
                 >
                   <View style={{ 
                     justifyContent: 'space-around',
@@ -400,6 +402,8 @@ class ViewStatus extends Component {
               );
             })}
         </ScrollView>
+       
+      
       </>
     );
   }

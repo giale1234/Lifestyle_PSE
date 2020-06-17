@@ -1,4 +1,3 @@
-
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {
@@ -9,12 +8,11 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  Picker
+  Picker,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import moment from 'moment'; 
+import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
-
 
 import {
   Container,
@@ -35,81 +33,76 @@ import {
   Card,
   CardItem,
 } from 'native-base';
-import { Slider } from 'react-native-elements';
+import {Slider} from 'react-native-elements';
 
- class Exercise extends Component {
+class Exercise extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //defauilt value of the date time
       id: '',
-      date: '',
-      duration: 0,  
+      date: moment().format('DD-MM-YYYY'),
+      duration: 0,
       category: '',
-      // categoryImage: '',
-      // checkedIndex: '',
-     
-     
+      checkedIndex: '',
     };
-  
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps && nextProps.exerciseEdit) {
+
+  componentWillMount() {
+    if (this.props.exerciseEdit) {
       this.setState({
-        id: nextProps.exerciseEdit.id,
-        date: nextProps.exerciseEdit.date,
-        duration: nextProps.exerciseEdit.duration,  
-        category: nextProps.exerciseEdit.category,
-      });
-    } else {
-      this.setState({
-        id: '',
-        duration: 0,  
-        category: '',
+        id: this.props.exerciseEdit.id,
+        date: this.props.exerciseEdit.date,
+        duration: this.props.exerciseEdit.duration,
+        category: this.props.exerciseEdit.category,
       });
     }
   }
- 
-  componentDidMount() {
 
-    var currentDate = moment().format("DD-MM-YYYY");
-    this.setState({
-      //Setting the value of the date time
-      date:currentDate ,
-    });
-  }
-  handleOnChange = (text,name) => {
+  handleOnChange = (text, name) => {
     this.setState({
       [name]: text,
     });
-
   };
   handleOnSubmit = () => {
-    if (this.state.duration === 0 ){
-      alert('Please enter the amount of time !!!')
-    }else if (this.state.category === '' ){
-      alert('Please choose category !!!')
-    }else{
-      var currentDate = moment().format("DD-MM-YYYY");
-      
+    if (this.state.duration === 0) {
+      alert('Please enter the amount of time !!!');
+    } else if (this.state.category === '') {
+      alert('Please choose category !!!');
+    } else {
+      var currentDate = moment().format('DD-MM-YYYY');
+
       this.props.onSubmit(this.state);
       this.setState({
         id: '',
         date: currentDate,
-        duration: 0,  
+        duration: 0,
         category: '',
         checkedIndex: '',
-      })
+      });
     }
   };
 
-
   render() {
-    console.log("checkedIndex", this.state.checkedIndex)
-    let {exerciseEdit } = this.props;
-    console.log("exerciseEdit", this.props.exerciseEdit)
+    console.log('state', this.state);
+
+    let {exerciseEdit} = this.props;
+    console.log('exerciseEdit', this.props.exerciseEdit);
     return (
       <Content padder>
+        {this.props.exerciseEdit ? (
+          <View style={{alignItems: 'center'}}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 25,
+                color: 'blue',
+                margin: 20,
+              }}>
+              EDIT{' '}
+            </Text>
+          </View>
+        ) : null}
+
         <Form>
           <Item stackedLabel style={{borderColor: 'white'}}>
             <Label>Date:</Label>
@@ -143,117 +136,139 @@ import { Slider } from 'react-native-elements';
           </Item>
         </Form>
 
-        {/* <Form>
-          <Item stackedLabel>
-            <Label>Duration: </Label>
-            <Item regular style={{marginTop: 10}}>
-              <Input
-                style={{height: 45}}
-                placeholder="Total time ...."
-                onChangeText={(text) => this.handleOnChange(text,'duration')}
-                value={this.state.duration}
-                name="duration"
-              />
-            </Item>
-          </Item>
-        </Form> */}
- {/* <Label style={{color: 'grey', fontSize: 20, margin: 10}}>
-          Duration:
-        </Label> */}
-         <Label style={{color: '#fa8100',fontWeight:"bold", fontSize: 20, margin: 20, marginTop:30}}>
+        <Label
+          style={{
+            color: '#fa8100',
+            fontWeight: 'bold',
+            fontSize: 20,
+            margin: 20,
+            marginTop: 30,
+          }}>
           Duration (min):
         </Label>
-            <Slider
-                value={this.state.duration}
-                onValueChange={value => this.setState({duration: value })}
-                step={1}
-                minimumValue={0}
-                maximumValue={600}
-                // maximumTrackTintColor="#FFD3B5"
-                thumbTintColor="#FE4365"
-                style={{margin:10}}
-            />
-             <Text style={{marginLeft:30}}>Value: {this.state.duration} min</Text>
-        
+        <Slider
+          value={this.state.duration}
+          onValueChange={value => this.setState({duration: value})}
+          step={1}
+          minimumValue={0}
+          maximumValue={600}
+          // maximumTrackTintColor="#FFD3B5"
+          thumbTintColor="#FE4365"
+          style={{margin: 10}}
+        />
+        <Text style={{marginLeft: 30}}>Value: {this.state.duration} min</Text>
+
         <Label style={{color: 'grey', fontSize: 20, margin: 10}}>
           Category:
         </Label>
-     
 
-
-          <View style={{borderColor:"grey", borderWidth:1, marginLeft:15}}>
-        <Picker
-              selectedValue={this.state.category}
-              onValueChange={(itemValue, itemIndex) => this.setState({category: itemValue, checkedIndex: itemIndex})}>
-              <Picker.Item  label="Select activity ..." value="" />
-              <Picker.Item  label="🚴‍♂️  Cycling" value="🚴       Cycling" />
-              <Picker.Item  label="🏈  American Football" value="🏈       American Football" />
-              <Picker.Item  label="🏸 Badminton" value="🏸       Badminton" />
-              <Picker.Item  label="🏀  Basketball" value="🏀       Basketball" />
-              <Picker.Item  label="🥊  Boxing Glove" value="🥊       Boxing Glove" />
-              <Picker.Item  label="🎳  Bowling" value="🎳       Bowling" />
-              <Picker.Item  label="🧗‍♂️ Climbing" value="🧗‍♂️       Climbing" />
-              <Picker.Item  label="💃  Dancing" value="💃       Dancing" />
-              <Picker.Item  label="⚽  Football" value="⚽      Football" />
-              <Picker.Item  label="🏌️  Golf" value="🏌️       Golf" />
-              <Picker.Item  label="🏋️‍♂️  Gym" value="🏋️       Gym‍" />
-              <Picker.Item  label="🏓  Ping Pong" value="🏓       Ping Pong" />
-              <Picker.Item  label="🏇  Horse Racing" value="🏇       HorseRacing" />
-              <Picker.Item  label="🚣  Rowing Boat" value="🚣       RowingBoat" />
-              <Picker.Item  label="🏃🏿‍♂️  Running" value="🏃🏿‍♂️       Running" />
-              <Picker.Item  label="🏐  Volleyball" value="🏐       Voleyball" />
-              <Picker.Item  label="🚶 Walking" value="🚶       Walking" />
-              <Picker.Item  label="🏊‍♂️  Swimming" value="🏊‍♂️       Swimming" />
-              <Picker.Item  label="🏄  Surfing" value="🏄       Surfing" />
-              <Picker.Item  label="🏂   Snowboarder" value="🏂       Snowboarder" />
-              <Picker.Item  label="🧘  Yoga" value="🧘       Yoga" />
-
+        <View style={{borderColor: 'grey', borderWidth: 1, marginLeft: 15}}>
+          <Picker
+            selectedValue={this.state.category}
+            onValueChange={(itemValue, itemIndex) =>
+              this.setState({category: itemValue, checkedIndex: itemIndex})
+            }>
+            <Picker.Item label="Select activity ..." value="" />
+            <Picker.Item label="🚴‍♂️  Cycling" value="🚴       Cycling" />
+            <Picker.Item
+              label="🏈  American Football"
+              value="🏈       American Football"
+            />
+            <Picker.Item label="🏸 Badminton" value="🏸       Badminton" />
+            <Picker.Item label="🏀  Basketball" value="🏀       Basketball" />
+            <Picker.Item
+              label="🥊  Boxing Glove"
+              value="🥊       Boxing Glove"
+            />
+            <Picker.Item label="🎳  Bowling" value="🎳       Bowling" />
+            <Picker.Item label="🧗‍♂️ Climbing" value="🧗‍♂️       Climbing" />
+            <Picker.Item label="💃  Dancing" value="💃       Dancing" />
+            <Picker.Item label="⚽  Football" value="⚽      Football" />
+            <Picker.Item label="🏌️  Golf" value="🏌️       Golf" />
+            <Picker.Item label="🏋️‍♂️  Gym" value="🏋️       Gym‍" />
+            <Picker.Item label="🏓  Ping Pong" value="🏓       Ping Pong" />
+            <Picker.Item
+              label="🏇  Horse Racing"
+              value="🏇       HorseRacing"
+            />
+            <Picker.Item label="🚣  Rowing Boat" value="🚣       RowingBoat" />
+            <Picker.Item label="🏃🏿‍♂️  Running" value="🏃🏿‍♂️       Running" />
+            <Picker.Item label="🏐  Volleyball" value="🏐       Voleyball" />
+            <Picker.Item label="🚶 Walking" value="🚶       Walking" />
+            <Picker.Item label="🏊‍♂️  Swimming" value="🏊‍♂️       Swimming" />
+            <Picker.Item label="🏄  Surfing" value="🏄       Surfing" />
+            <Picker.Item
+              label="🏂   Snowboarder"
+              value="🏂       Snowboarder"
+            />
+            <Picker.Item label="🧘  Yoga" value="🧘       Yoga" />
           </Picker>
-         
-         
         </View>
-       
+
+        {this.props.exerciseEdit ? (
+          <View style={{flexDirection: 'row', justifyContent:"center"}}>
+            <Button
+              block
+              style={{margin: 15, marginTop: 50}}
+              onPress={
+               
+            this.handleOnSubmit,
+            ()=>{
+              this.props.navigation.goBack()
+            }
+              }>
+              <Text>SUBMIT</Text>
+            </Button>
+            <Button
+              block
+              style={{margin: 15, marginTop: 50}}
+              onPress={() => {
+                this.props.navigation.goBack(), this.props.deleteExerciseEdit();
+              }}>
+              <Text>Close</Text>
+            </Button>
+          </View>
+        ) : (
+          <Button
+            block
+            style={{margin: 15, marginTop: 50}}
+            onPress={this.handleOnSubmit}>
+            <Text>SUBMIT</Text>
+          </Button>
+        )}
+
         
-      <Button
-          block
-          style={{margin: 15, marginTop: 50}}
-          onPress={this.handleOnSubmit}>
-          <Text>SUBMIT</Text>
-        </Button>
-        <View>
-  <Text>{exerciseEdit.id}</Text>
-  <Text>{exerciseEdit.date}</Text>
-  <Text>{exerciseEdit.duration}</Text>
-  <Text>{exerciseEdit.category}</Text>
-     </View>
       </Content>
-  
- 
-       
     );
   }
 }
 const mapDispatchToProps = dispatch => {
-    return {
-      onSubmit: exercise => {
-        let action = {
-          type: 'SUBMIT_E',
-          exercise,
-        };
-        dispatch(action);
-      },
-    };
+  return {
+    onSubmit: exercise => {
+      let action = {
+        type: 'SUBMIT_E',
+        exercise,
+      };
+      dispatch(action);
+    },
+    deleteExerciseEdit: () => {
+      let action = {
+        type: 'EDIT_E',
+        exercise: null,
+      };
+      dispatch(action);
+    },
   };
-  
-  const mapStateToProps = state => {
-    return {
-     
-      exerciseEdit: state.exerciseReducer.exerciseEdit
-    };
-  };
+};
 
-  export default connect(mapStateToProps, mapDispatchToProps)(Exercise);
-  
+const mapStateToProps = state => {
+  return {
+    exerciseEdit: state.exerciseReducer.exerciseEdit,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Exercise);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -302,6 +317,3 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 });
-
-
-

@@ -26,6 +26,8 @@ import AddStatus from './AddStatus/AddStatus';
 import ViewStatus from './ViewStatus/ViewStatus';
 
 import Chart from "./Chart/Chart";
+import Test from "./ViewStatus/Test";
+import Test2 from "./ViewStatus/Test2"
 const Tab = createBottomTabNavigator();
 class Health extends Component {
   render() {
@@ -56,6 +58,26 @@ class Health extends Component {
           component={Chart}
           options={{
             tabBarLabel: 'CHART',
+            tabBarIcon: () => (
+              <Image source={require(icon_chart)} style={styles.iconStyle} />
+            ),
+          }}
+        />
+       <Tab.Screen
+          name="Test"
+          component={Test}
+          options={{
+            tabBarLabel: 'TEST',
+            tabBarIcon: () => (
+              <Image source={require(icon_chart)} style={styles.iconStyle} />
+            ),
+          }}
+        />
+         <Tab.Screen
+          name="Test2"
+          component={Test2}
+          options={{
+            tabBarLabel: 'TEST2',
             tabBarIcon: () => (
               <Image source={require(icon_chart)} style={styles.iconStyle} />
             ),

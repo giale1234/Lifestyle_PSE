@@ -118,7 +118,7 @@ class BudgetItem extends Component {
               style={[styles.backRightBtn, styles.backRightBtnLeft]}
               onPress={() => {
                 this.props.edit();
-                // this.props.navigation.push("AddStatus");
+                this.props.navigation.push("AddStatus");
               },income}
             //  onPress={}
             
