@@ -24,7 +24,6 @@ var icon_chart = './../../../../assets/chartTab_icon.png';
 /* Import screens */
 import AddStatus from './AddStatus/AddStatus';
 import ViewStatus from './ViewStatus/ViewStatus';
-import Agenda from  "./ViewStatus/Agenda"
 import Chart from "./Chart/Chart";
 import BudgetItem from "./ViewStatus/BudgetItem";
 

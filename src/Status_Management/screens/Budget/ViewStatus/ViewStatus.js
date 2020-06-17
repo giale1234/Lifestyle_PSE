@@ -31,6 +31,7 @@ import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import moment from 'moment';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import Item from './BudgetItem'
+
 class ViewStatus extends PureComponent {
   constructor(props) {
     super(props);

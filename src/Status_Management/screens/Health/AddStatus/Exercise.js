@@ -98,15 +98,14 @@ import { Slider } from 'react-native-elements';
         date: currentDate,
         duration: 0,  
         category: '',
-        // categoryImage: '',
-        // checkedIndex: '',
-        
+        checkedIndex: '',
       })
     }
   };
 
 
   render() {
+    console.log("checkedIndex", this.state.checkedIndex)
     let {exerciseEdit } = this.props;
     console.log("exerciseEdit", this.props.exerciseEdit)
     return (
@@ -185,9 +184,9 @@ import { Slider } from 'react-native-elements';
           <View style={{borderColor:"grey", borderWidth:1, marginLeft:15}}>
         <Picker
               selectedValue={this.state.category}
-              onValueChange={(itemValue, itemIndex) => this.setState({category: itemValue})}>
+              onValueChange={(itemValue, itemIndex) => this.setState({category: itemValue, checkedIndex: itemIndex})}>
               <Picker.Item  label="Select activity ..." value="" />
-              <Picker.Item  label="🚴‍♂️  Cycling" value="🚴‍       Cycling" />
+              <Picker.Item  label="🚴‍♂️  Cycling" value="🚴       Cycling" />
               <Picker.Item  label="🏈  American Football" value="🏈       American Football" />
               <Picker.Item  label="🏸 Badminton" value="🏸       Badminton" />
               <Picker.Item  label="🏀  Basketball" value="🏀       Basketball" />
