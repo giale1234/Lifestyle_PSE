@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
-import RNPickerSelect from 'react-native-picker-select';
 
 import {
   Container,
@@ -35,6 +34,7 @@ import {
 } from 'native-base';
 import {Slider} from 'react-native-elements';
 
+var icon_close = "../../../../../assets/close_icon.png"
 class Exercise extends Component {
   constructor(props) {
     super(props);
@@ -72,6 +72,9 @@ class Exercise extends Component {
       var currentDate = moment().format('DD-MM-YYYY');
 
       this.props.onSubmit(this.state);
+
+      this.props.deleteExerciseEdit();
+      
       this.setState({
         id: '',
         date: currentDate,
@@ -79,6 +82,7 @@ class Exercise extends Component {
         category: '',
         checkedIndex: '',
       });
+   
     }
   };
 
@@ -90,17 +94,24 @@ class Exercise extends Component {
     return (
       <Content padder>
         {this.props.exerciseEdit ? (
-          <View style={{alignItems: 'center'}}>
+       <View>
+            <TouchableOpacity style={{marginLeft:330, marginTop:20}} onPress={() => {
+                this.props.navigation.goBack(), this.props.deleteExerciseEdit()}}>
+            <Image source={require(icon_close)} style={{height:30, width:30}}  />
+            </TouchableOpacity>
+            <View style={{alignItems: 'center'}}>
             <Text
               style={{
                 fontWeight: 'bold',
                 fontSize: 25,
-                color: 'blue',
+                color: '#ffbf00',
                 margin: 20,
+                marginTop:40
               }}>
-              EDIT{' '}
+              EDIT EXERCISE
             </Text>
           </View>
+       </View>
         ) : null}
 
         <Form>
@@ -210,13 +221,8 @@ class Exercise extends Component {
             <Button
               block
               style={{margin: 15, marginTop: 50}}
-              onPress={
-               
-            this.handleOnSubmit,
-            ()=>{
-              this.props.navigation.goBack()
-            }
-              }>
+              onPress={ () => {this.handleOnSubmit(); this.props.deleteExerciseEdit();this.props.navigation.goBack()} }
+              >
               <Text>SUBMIT</Text>
             </Button>
             <Button

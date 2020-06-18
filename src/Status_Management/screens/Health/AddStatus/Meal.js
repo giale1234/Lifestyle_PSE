@@ -25,7 +25,7 @@ const options = {
       path: 'images',
     },
   };
-  
+  var icon_close = "../../../../../assets/close_icon.png"
   
 import {
   Container,
@@ -53,7 +53,7 @@ import { Slider } from 'react-native-elements';
     super(props);
     this.state = {
       id: '',
-      date: '',
+      date:  moment().format('DD-MM-YYYY'),
       name: '',  
       carb: 0,
       protein:0,
@@ -63,34 +63,18 @@ import { Slider } from 'react-native-elements';
     };
   
   }
-  componentWillReceiveProps(prevProps) {
-    if (prevProps && prevProps.mealEdit) {
+  componentWillMount() {
+    if (this.props.mealEdit) {
       this.setState({
-        id: prevProps.mealEdit.id,
-        date: prevProps.mealEdit.date,
-        name: prevProps.mealEdit.name,  
-        carb: prevProps.mealEdit.carb,
-        protein: prevProps.mealEdit.protein,
-        fat: prevProps.mealEdit.fat,
-      });
-    } else {
-      this.setState({
-        id: '',
-        name: '',  
-        carb: 0,
-        protein:0,
-        fat:0, 
+        id: this.props.mealEdit.id,
+        date: this.props.mealEdit.date,
+        name: this.props.mealEdit.name,
+        carb: this.props.mealEdit.carb,
+        protein: this.props.mealEdit.protein,
+        fat: this.props.mealEdit.fat,
+        filePath: this.props.mealEdit.filePath,
       });
     }
-  }
-  
-  componentDidMount() {
-
-    var currentDate = moment().format("DD-MM-YYYY");
-    this.setState({
-      //Setting the value of the date time
-      date:currentDate 
-    });
   }
   chooseFile = () => {
     var options = {
@@ -154,6 +138,7 @@ import { Slider } from 'react-native-elements';
       var currentDate = moment().format("DD-MM-YYYY");
     
       this.props.onSubmit(this.state);
+      this.props.deleteMealEdit();
       this.setState({
         id: '',
         date: currentDate,
@@ -161,6 +146,7 @@ import { Slider } from 'react-native-elements';
         carb: 0,
         protein:0,
         fat:0, 
+        filePath: {},
       })
     }
   };
@@ -172,7 +158,28 @@ import { Slider } from 'react-native-elements';
     
    
     return (
-      <Content padder>
+      <Content padder style={{backgroundColor:"white"}}>
+         {this.props.mealEdit ? (
+       <View>
+            <TouchableOpacity style={{marginLeft:330, marginTop:20}} onPress={() => {
+                this.props.navigation.goBack(), this.props.deleteMealEdit()}}>
+            <Image source={require(icon_close)} style={{height:30, width:30}}  />
+            </TouchableOpacity>
+            <View style={{alignItems: 'center'}}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 25,
+                color: '#ffbf00',
+                margin: 20,
+                marginTop:40
+              }}>
+              EDIT MEAL
+            </Text>
+          </View>
+       </View>
+        ) : null}
+
         <Form>
           <Item stackedLabel style={{borderColor: 'white'}}>
             <Label>Date:</Label>
@@ -295,22 +302,35 @@ import { Slider } from 'react-native-elements';
             <Text>Value: {this.state.fat}</Text>
             </View>
 
-        
-      <Button
-          block
-          style={{margin: 15, marginTop: 50}}
-          onPress={this.handleOnSubmit}>
-          <Text>SUBMIT</Text>
-        </Button>
+         {this.props.mealEdit ? (
+          <View style={{flexDirection: 'row', justifyContent:"center"}}>
+            <Button
+              block
+              style={{margin: 15, marginTop: 50}}
+              onPress={ () => {this.handleOnSubmit(); this.props.deleteMealEdit();this.props.navigation.goBack()} }
+              >
+              <Text>SUBMIT</Text>
+            </Button>
+            <Button
+              block
+              style={{margin: 15, marginTop: 50}}
+              onPress={() => {
+                this.props.navigation.goBack(), this.props.deleteMealEdit();
+              }}>
+              <Text>Close</Text>
+            </Button>
+          </View>
+        ) : (
+          <Button
+            block
+            style={{margin: 15, marginTop: 50}}
+            onPress={this.handleOnSubmit}>
+            <Text>SUBMIT</Text>
+          </Button>
+        )} 
 
-        <View>
-            <Text>{mealEdit.id}</Text>
-            <Text>{mealEdit.date}</Text>
-            <Text>{mealEdit.name}</Text>
-            <Text>{mealEdit.carb}</Text>
-            <Text>{mealEdit.protein}</Text>
-            <Text>{mealEdit.fat}</Text>
-        </View>
+
+       
 
       
       </Content>
@@ -326,6 +346,13 @@ const mapDispatchToProps = dispatch => {
         let action = {
           type: 'SUBMIT_M',
           meal,
+        };
+        dispatch(action);
+      },
+      deleteMealEdit: () => {
+        let action = {
+          type: 'EDIT_M',
+          exercise: null,
         };
         dispatch(action);
       },

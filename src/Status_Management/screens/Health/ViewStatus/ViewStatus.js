@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet,Image} from 'react-native';
-
+import {Overlay} from "react-native-elements";
 import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import moment from 'moment';
@@ -21,6 +21,7 @@ import {
     ListItem, 
     List
   } from 'native-base';
+import Exercise from '../AddStatus/Exercise';
 
   const waterGlass_active =  require('../../../../../assets/waterBottle_on.png');
   const  waterGlass_inactive = require('../../../../../assets/waterBottle.off.png');
@@ -36,6 +37,7 @@ class ViewStatus extends Component {
       id: '', 
       duration: 0,  
       category: '',
+      visible : false
     };
   }
   
@@ -52,8 +54,13 @@ class ViewStatus extends Component {
     })
   }
  
+  
   render() {
-    
+    const toggleOverlay = () => {
+      this.setState({
+        visible : !this.state.visible
+      })
+    };
     const {exerciseList, mealList} = this.props;
     var totalTime = 0;
     var totalCarb = 0;
@@ -377,8 +384,11 @@ class ViewStatus extends Component {
                 <TouchableOpacity 
                 // onPress={()=>this.props.deleteExercise(exercise)}
                 onPress={()=>{this.props.editExercise(exercise); 
-                  this.props.navigation.push("Exercise")
-                }}
+                  this.props.navigation.push("Exercise")  
+                }
+                // toggleOverlay
+              }
+
                 >
                   <View style={{ 
                     justifyContent: 'space-around',
@@ -403,7 +413,10 @@ class ViewStatus extends Component {
             })}
         </ScrollView>
        
-      
+        <Overlay isVisible={this.state.visible} onBackdropPress={toggleOverlay}>
+         <Exercise/>
+
+        </Overlay>
       </>
     );
   }

@@ -66,8 +66,6 @@ class Budget extends Component {
           }}
         />
       </Tab.Navigator>
-
-     
     );
   }
 }
