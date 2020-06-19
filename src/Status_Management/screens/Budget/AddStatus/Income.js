@@ -177,8 +177,8 @@ const DATA = [
                 fontWeight: 'bold',
                 fontSize: 25,
                 color: '#ffbf00',
-                margin: 20,
-                marginTop:20
+                marginBottom: 20,
+                // marginTop:20
               }}>
               EDIT INCOME
             </Text>

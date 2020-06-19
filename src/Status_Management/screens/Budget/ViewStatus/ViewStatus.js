@@ -111,11 +111,6 @@ class ViewStatus extends PureComponent {
       this.loadItems();
     }
   }
-  
-  // UNSAFE_componentWillMount(){
-  //   console.log("componentDidMount")
-  //   this.loadItems();
-  // }
 
   componentDidMount() {
     console.log("componentDidMount")

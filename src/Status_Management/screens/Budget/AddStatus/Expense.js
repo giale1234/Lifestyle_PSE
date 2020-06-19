@@ -33,6 +33,8 @@ import {
   CardItem,
 } from 'native-base';
 
+var icon_close = "../../../../../assets/close_icon.png"
+
 const DATA = [
   {
     id: 0,
@@ -99,13 +101,44 @@ const DATA = [
   }
  
   componentDidMount() {
-
     var currentDate = moment().format("DD-MM-YYYY");
-    this.setState({
-      //Setting the value of the date time
-      date:currentDate ,
-    });
+    const {budgetEdit} = this.props;
+    
+    if(budgetEdit){
+      this.setState({
+        id: budgetEdit.id,
+        date: currentDate,
+        note: budgetEdit.note,
+        amount: budgetEdit.amount,
+        type: budgetEdit.type,
+        category: budgetEdit.category,
+        categoryImage: budgetEdit.categoryImage,
+        checkedIndex: budgetEdit.checkedIndex,
+      
+      })
+    }else{
+      this.setState({
+        //Setting the value of the date time
+        date:currentDate 
+      });
+    }
   }
+  componentWillMount() {
+   
+    if (this.props.budgetEdit) {
+      this.setState({
+        id: this.props.budgetEdit.id,
+        date: this.props.budgetEdit.date,
+        note: this.props.budgetEdit.note,
+        amount: this.props.budgetEdit.amount,
+        type: this.props.budgetEdit.type,
+        category: this.props.budgetEdit.category,
+        categoryImage: this.props.budgetEdit.categoryImage,
+        checkedIndex: this.props.budgetEdit.checkedIndex,
+      });
+    }
+  }
+
   handleOnChange = (text,name) => {
     this.setState({
       [name]: text,
@@ -139,6 +172,26 @@ const DATA = [
     console.log("edit expense",this.props.budgetEdit);
     return (
       <Content padder>
+              {this.props.budgetEdit ? (
+        <View>
+             <TouchableOpacity style={{marginLeft:330, marginTop:20}} onPress={() => {
+                 this.props.navigation.goBack(), this.props.deleteBudgetEdit()}}>
+             <Image source={require(icon_close)} style={{height:30, width:30}}  />
+             </TouchableOpacity>
+             <View style={{alignItems: 'center'}}>
+             <Text
+               style={{
+                 fontWeight: 'bold',
+                 fontSize: 25,
+                 color: '#ffbf00',
+                 marginBottom: 20,
+                
+               }}>
+               EDIT EXPENSE
+             </Text>
+           </View>
+        </View>
+         ) : null}
         <Form>
           <Item stackedLabel style={{borderColor: 'white'}}>
             <Label>Date:</Label>
@@ -231,12 +284,32 @@ const DATA = [
             numColumns={3}
           />
         </SafeAreaView>
-        <Button
-          block
-          style={{margin: 15, marginTop: 50}}
-          onPress={this.handleOnSubmit}>
-          <Text>SUBMIT</Text>
-        </Button>
+        {this.props.budgetEdit ? (
+          <View style={{flexDirection: 'row', justifyContent:"center"}}>
+            <Button
+              block
+              style={{margin: 15, marginTop: 50}}
+              onPress={ () => {this.handleOnSubmit(); this.props.deleteBudgetEdit();this.props.navigation.goBack()} }
+              >
+              <Text>SUBMIT</Text>
+            </Button>
+            <Button
+              block
+              style={{margin: 15, marginTop: 50}}
+              onPress={() => {
+                this.props.navigation.goBack(), this.props.deleteBudgetEdit();
+              }}>
+              <Text>Close</Text>
+            </Button>
+          </View>
+        ) : (
+          <Button
+            block
+            style={{margin: 15, marginTop: 50}}
+            onPress={this.handleOnSubmit}>
+            <Text>SUBMIT</Text>
+          </Button>
+        )}
       </Content>
     );
   }
@@ -247,6 +320,13 @@ const mapDispatchToProps = dispatch => {
         let action = {
           type: 'SUBMIT',
           budget: budget,
+        };
+        dispatch(action);
+      },
+      deleteBudgetEdit: () => {
+        let action = {
+          type: 'EDIT',
+          exercise: null,
         };
         dispatch(action);
       },
