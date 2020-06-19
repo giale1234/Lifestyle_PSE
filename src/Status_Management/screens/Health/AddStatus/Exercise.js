@@ -48,6 +48,7 @@ class Exercise extends Component {
   }
 
   componentWillMount() {
+    console.log("componentWillMount")
     if (this.props.exerciseEdit) {
       this.setState({
         id: this.props.exerciseEdit.id,
@@ -87,10 +88,10 @@ class Exercise extends Component {
   };
 
   render() {
-    console.log('state', this.state);
+
 
     let {exerciseEdit} = this.props;
-    console.log('exerciseEdit', this.props.exerciseEdit);
+  
     return (
       <Content padder>
         {this.props.exerciseEdit ? (
@@ -106,7 +107,7 @@ class Exercise extends Component {
                 fontSize: 25,
                 color: '#ffbf00',
                 margin: 20,
-                marginTop:40
+                marginTop:20
               }}>
               EDIT EXERCISE
             </Text>

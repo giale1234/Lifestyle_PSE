@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
-import { Overlay } from 'react-native-elements';
+import {Overlay} from 'react-native-elements';
 
 import {connect} from 'react-redux';
 import {
@@ -41,18 +41,16 @@ class BudgetItem extends Component {
     this.openRowKey = null;
   }
 
-  onRowOpen = key => () => {
-    if (this.openRowKey && key !== this.openRowKey) {
-      const rowRef = this.rowRefs[this.openRowKey];
-      rowRef.closeRow && rowRef.closeRow();
-    }
-    this.openRowKey = key;
-  };
+  // onRowOpen = key => () => {
+  //   if (this.openRowKey && key !== this.openRowKey) {
+  //     const rowRef = this.rowRefs[this.openRowKey];
+  //     rowRef.closeRow && rowRef.closeRow();
+  //   }
+  //   this.openRowKey = key;
+  // };
   render() {
-
     const {budgetList} = this.props;
     let {item, firstItemInDay} = this.props;
-  
 
     function calIncome() {
       var incomeTotal = 0;
@@ -101,119 +99,117 @@ class BudgetItem extends Component {
         setVisible(!visible);
       };
 
-      const income = () => {
-        return this.props.navigation.push("Income");
-      }
       return (
         <>
-        <SwipeRow
-        key={item.id}
-        ref={ref => (this.rowRefs[item.id] = ref)}
-        onRowOpen={this.onRowOpen(item.id)}
-          rightOpenValue={-150}
-          style={styles.swipeRow}
-          disableRightSwipe={true}>
-          <View style={styles.rowBack}>
-            <TouchableOpacity
-              style={[styles.backRightBtn, styles.backRightBtnLeft]}
-              onPress={() => {
-                this.props.edit();
-                this.props.navigation.push("AddStatus");
-              },income}
-            //  onPress={}
-            
-              >
-              <Text style={styles.backTextWhite}>Edit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.backRightBtn, styles.backRightBtnRight]}
-              onPress={() => this.props.delete(item)}>
-              <Text style={styles.backTextWhite}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableHighlight style={styles.rowFront}>
-            <View style={{flexDirection: 'row'}}>
-              <Image source={item.categoryImage} style={styles.image} />
-
-              <View style={{marginLeft: 30, marginTop: 5, flex: 1}}>
-                <Text>{item.category}</Text>
-                <Text note numberOfLines={1}>
-                  {item.note}
-                </Text>
-              </View>
-              <Button transparent>
-                <Text
-                  style={
-                    item.type === 'Income'
-                      ? styles.incomeText
-                      : styles.expenseText
-                  }>
-                  {item.amount}
-                </Text>
-              </Button>
+          <SwipeRow
+            key={item.id}
+            // ref={ref => (this.rowRefs[item.id] = ref)}
+            // onRowOpen={this.onRowOpen(item.id)}
+            rightOpenValue={-150}
+            style={styles.swipeRow}
+            disableRightSwipe={true}>
+            <View style={styles.rowBack}>
+              <TouchableOpacity
+                style={[styles.backRightBtn, styles.backRightBtnLeft]}
+                onPress={() => {
+                  this.props.edit(item);
+                  {item.type === "Income" ?  this.props.navigation.push("Income") : this.props.navigation.push("Expense")}
+                 
+                }}>
+                <Text style={styles.backTextWhite}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.backRightBtn, styles.backRightBtnRight]}
+                onPress={() => {
+                  this.props.delete(item);
+                }}>
+                <Text style={styles.backTextWhite}>Delete</Text>
+              </TouchableOpacity>
             </View>
-          </TouchableHighlight>
-        </SwipeRow>
 
-         <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
-         <Text>Hello from Overlay!</Text>
-       
-        
-       
-       
-        </Overlay>
-       </>
+            <TouchableHighlight style={styles.rowFront}>
+              <View style={{flexDirection: 'row'}}>
+                <Image source={item.categoryImage} style={styles.image} />
+
+                <View style={{marginLeft: 30, marginTop: 5, flex: 1}}>
+                  <Text>{item.category}</Text>
+                  <Text note numberOfLines={1}>
+                    {item.note}
+                  </Text>
+                </View>
+                <Button transparent>
+                  <Text
+                    style={
+                      item.type === 'Income'
+                        ? styles.incomeText
+                        : styles.expenseText
+                    }>
+                    {item.amount}
+                  </Text>
+                </Button>
+              </View>
+            </TouchableHighlight>
+          </SwipeRow>
+
+          <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+            <Text>Hello from Overlay!</Text>
+          </Overlay>
+        </>
       );
     };
     if (firstItemInDay) {
       return (
-          <>
-        <View style={{backgroundColor:"#E4EEE0",  width: 320,margin: 2,borderColor:"grey", borderWidth:1, height:50, justifyContent:"center"}}>
+        <>
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
+              backgroundColor: '#E4EEE0',
+              width: 320,
+              margin: 2,
+              borderColor: 'grey',
+              borderWidth: 1,
+              height: 50,
+              justifyContent: 'center',
             }}>
-            <Text style={styles.text}>Income </Text>
-            <Text style={styles.text}>Expense</Text>
-            <Text style={styles.text}>Total </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            <Text style={styles.incomeText}> {calIncome()}</Text>
-            <Text style={styles.expenseText}> {calExpense()}</Text>
-            <Text style={styles.totalText}>{calTotal()}</Text>
-          </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+              }}>
+              <Text style={styles.text}>Income </Text>
+              <Text style={styles.text}>Expense</Text>
+              <Text style={styles.text}>Total </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+              }}>
+              <Text style={styles.incomeText}> {calIncome()}</Text>
+              <Text style={styles.expenseText}> {calExpense()}</Text>
+              <Text style={styles.totalText}>{calTotal()}</Text>
+            </View>
           </View>
           <Item />
-          </>
-        
+        </>
       );
     } else {
       return (
         <>
-      <Item />
-    
-     
-    </>
-      )
-      ;
+          <Item />
+        </>
+      );
     }
   }
 }
 const mapDisaptchToProps = dispatch => {
   return {
     //key: value
-    edit: () => {
+    edit: item => {
       let action = {
         type: 'EDIT',
-        budget: 'giale',
+        budget: item,
       };
-     
+
       dispatch(action);
     },
 

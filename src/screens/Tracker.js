@@ -34,6 +34,7 @@ import AddStatus_Health from "../Status_Management/screens/Health/AddStatus/AddS
 import Exercise from "../Status_Management/screens/Health/AddStatus/Exercise";
 import ViewStatus_Health from "../Status_Management/screens/Health/ViewStatus/ViewStatus";
 import Meal from "../Status_Management/screens/Health/AddStatus/Meal";
+import Expense from "../Status_Management/screens/Budget/AddStatus/Expense";
 
 const Stack = createStackNavigator();
 function StackNavigator() {
@@ -48,6 +49,7 @@ function StackNavigator() {
         <Stack.Screen name = 'AddStatus' component = {AddStatus}/>
         <Stack.Screen name = 'BudgetItem' component = {BudgetItem}/>
         <Stack.Screen name = 'Income' component = {Income}/>
+        <Stack.Screen name = 'Expense' component = {Expense}/>
 
         <Stack.Screen name = 'AddStatus_Health' component = {AddStatus_Health}/>
      

@@ -37,19 +37,15 @@ class ViewStatus extends PureComponent {
     super(props);
     this.state = {
       items: {},
-      currentMonth: '',
+      currentMonth: moment().format('YYYY-MM'),
     };
    
   }
 
-  componentWillMount() {
-    var currentMonth = moment().format('YYYY-MM');
-    this.setState({
-      currentMonth,
-    });
-  }
   loadItems = () => {
+
     let {budgetList} = this.props;
+ 
     for (let i = -15; i < 85; i++) {
       var timestamp = Math.floor(Date.now());
       const time = timestamp + i * 24 * 60 * 60 * 1000;
@@ -110,20 +106,31 @@ class ViewStatus extends PureComponent {
   };
 
   componentDidUpdate(prevProps) {
+    console.log("componentDidUpdate_View")
     if (prevProps.budgetList !== this.props.budgetList) {
       this.loadItems();
-    
     }
   }
+  
+  // UNSAFE_componentWillMount(){
+  //   console.log("componentDidMount")
+  //   this.loadItems();
+  // }
 
   componentDidMount() {
+    console.log("componentDidMount")
     this.loadItems();
   }
 
+
+
   renderItem = (item, firstItemInDay) => {
-    return <Item item={item} firstItemInDay={firstItemInDay}
+    return (
+      <Item item={item} firstItemInDay={firstItemInDay}
      navigation={this.props.navigation}
-     />;
+     />
+    )
+     ;
   };
   renderEmptyDate() {
     return (
@@ -133,7 +140,9 @@ class ViewStatus extends PureComponent {
     );
   }
   rowHasChanged = (r1, r2) => {
-    return r1.name !== r2.name;
+    return (
+      r1.id !== r2.id || r1.date !== r2.date || r1.amount !== r2.amount || r1.note !== r2.note || r1.category !== r2.category
+    );
   };
 
   timeToString = time => {
@@ -142,8 +151,9 @@ class ViewStatus extends PureComponent {
   };
 
   render() {
-    console.log("budgetList . view status", this.props.budgetList);
    
+    console.log("render")
+   console.log("this.props.budgetList",this.props.budgetList)
     return (
       <>
         <Header>
@@ -172,7 +182,7 @@ class ViewStatus extends PureComponent {
           renderItem={this.renderItem.bind(this)}
           renderEmptyDate={this.renderEmptyDate.bind(this)}
           rowHasChanged={this.rowHasChanged.bind(this)}
-          selected={this.state.currentMonth}
+          // selected={this.state.currentMonth}
         />
     
       </>

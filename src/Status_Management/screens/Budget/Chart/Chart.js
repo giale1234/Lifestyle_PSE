@@ -44,7 +44,7 @@ export default class Chart extends Component {
     };
   }
   componentWillMount() {
-    console.log('componentDidUpdate');
+    
     var selectedMonth = moment().format('YYYY-MM');
     this.setState({
       selectedMonth,
@@ -58,7 +58,7 @@ export default class Chart extends Component {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)});
     }
 
-    console.log(event.nativeEvent);
+    // console.log(event.nativeEvent);
   }
   render() {
     

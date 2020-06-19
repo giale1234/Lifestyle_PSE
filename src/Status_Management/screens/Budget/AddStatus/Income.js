@@ -37,6 +37,7 @@ import {
   CardItem,
 } from 'native-base';
 
+var icon_close = "../../../../../assets/close_icon.png"
 
 const DATA = [
     {
@@ -78,7 +79,7 @@ const DATA = [
     this.state = {
       //defauilt value of the date time
       id: '',
-      date: '',
+      date: moment().format("DD-MM-YYYY"),
       note: '',
       amount: '',
       type:'Income',
@@ -88,35 +89,8 @@ const DATA = [
     };
   
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps && nextProps.budgetEdit) {
-     
-      this.setState({
-        id: budgetEdit.id,
-        date: budgetEdit.date,
-        note: budgetEdit.note,
-        amount: budgetEdit.amount,
-        type: budgetEdit.type,
-        category: budgetEdit.category,
-        categoryImage: budgetEdit.categoryImage,
-
-      });
-    } else {
-      this.setState({
-        id: '',
-        date: '',
-        note: '',
-        amount: '',
-        type:'Income',
-        category: '',
-        categoryImage: '',
-        checkedIndex: '',
-      });
-    }
-  }
-
- 
   componentDidMount() {
+   
     var currentDate = moment().format("DD-MM-YYYY");
     const {budgetEdit} = this.props;
     
@@ -126,19 +100,33 @@ const DATA = [
         date: currentDate,
         note: budgetEdit.note,
         amount: budgetEdit.amount,
-        // type: budgetEdit.type,
+        type: budgetEdit.type,
         category: budgetEdit.category,
         categoryImage: budgetEdit.categoryImage,
+        checkedIndex: budgetEdit.checkedIndex,
       
       })
-     
     }else{
       this.setState({
         //Setting the value of the date time
         date:currentDate 
       });
     }
+  }
+  componentWillMount() {
    
+    if (this.props.budgetEdit) {
+      this.setState({
+        id: this.props.budgetEdit.id,
+        date: this.props.budgetEdit.date,
+        note: this.props.budgetEdit.note,
+        amount: this.props.budgetEdit.amount,
+        type: this.props.budgetEdit.type,
+        category: this.props.budgetEdit.category,
+        categoryImage: this.props.budgetEdit.categoryImage,
+        checkedIndex: this.props.budgetEdit.checkedIndex,
+      });
+    }
   }
   handleOnChange = (text,name) => {
     this.setState({
@@ -153,6 +141,8 @@ const DATA = [
       alert('Please choose category !!!')
     }else{
       var currentDate = moment().format("DD-MM-YYYY");
+
+      this.props.deleteBudgetEdit();
  
       this.props.onSubmit(this.state);
       this.setState({
@@ -171,8 +161,31 @@ const DATA = [
 
   render() {
     console.log("edit income",this.props.budgetEdit);
+    console.log("edit income state",this.state);
     return (
       <Content padder>
+
+    {this.props.budgetEdit ? (
+       <View>
+            <TouchableOpacity style={{marginLeft:330, marginTop:20}} onPress={() => {
+                this.props.navigation.goBack(), this.props.deleteBudgetEdit()}}>
+            <Image source={require(icon_close)} style={{height:30, width:30}}  />
+            </TouchableOpacity>
+            <View style={{alignItems: 'center'}}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: 25,
+                color: '#ffbf00',
+                margin: 20,
+                marginTop:20
+              }}>
+              EDIT INCOME
+            </Text>
+          </View>
+       </View>
+        ) : null}
+
         <Form>
           <Item stackedLabel style={{borderColor: 'white'}}>
             <Label>Date:</Label>
@@ -266,12 +279,33 @@ const DATA = [
           />
         </SafeAreaView>
        
-        <Button
-          block
-          style={{margin: 15, marginTop: 50}}
-          onPress={this.handleOnSubmit}>
-          <Text>SUBMIT</Text>
-        </Button>
+        {this.props.budgetEdit ? (
+          <View style={{flexDirection: 'row', justifyContent:"center"}}>
+            <Button
+              block
+              style={{margin: 15, marginTop: 50}}
+              onPress={ () => {this.handleOnSubmit(); this.props.deleteBudgetEdit();this.props.navigation.goBack()} }
+              >
+              <Text>SUBMIT</Text>
+            </Button>
+            <Button
+              block
+              style={{margin: 15, marginTop: 50}}
+              onPress={() => {
+                this.props.navigation.goBack(), this.props.deleteBudgetEdit();
+              }}>
+              <Text>Close</Text>
+            </Button>
+          </View>
+        ) : (
+          <Button
+            block
+            style={{margin: 15, marginTop: 50}}
+            onPress={this.handleOnSubmit}>
+            <Text>SUBMIT</Text>
+          </Button>
+        )}
+
       </Content>
     );
   }
@@ -281,7 +315,14 @@ const mapDispatchToProps = dispatch => {
       onSubmit: budget => {
         let action = {
           type: 'SUBMIT',
-          budget: budget,
+          budget,
+        };
+        dispatch(action);
+      },
+      deleteBudgetEdit: () => {
+        let action = {
+          type: 'EDIT',
+          exercise: null,
         };
         dispatch(action);
       },

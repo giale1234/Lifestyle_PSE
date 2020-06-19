@@ -307,6 +307,9 @@ class ViewStatus extends Component {
                   
                     }}>
 
+                    <View style={{height:40, width:40, }}>
+                        <Image  source={meal.filePath} style={{height:40, width:40, borderRadius:25}}/>
+                    </View>
                     <View style={{width:120}}>
                         <Text numberOfLines={1}  style={{fontSize: 20}}>{meal.name}</Text>
                     </View>

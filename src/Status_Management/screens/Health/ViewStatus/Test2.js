@@ -32,7 +32,7 @@ class Test extends Component {
     }
 
     render(){
-        console.log("STATE TEST ", this.state)
+     
         return (
             <View>
                 <Button onPress={this.props.editExercise("Helo")}><Text>Edit</Text></Button>

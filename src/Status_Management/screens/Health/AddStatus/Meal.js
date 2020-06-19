@@ -73,6 +73,7 @@ import { Slider } from 'react-native-elements';
         protein: this.props.mealEdit.protein,
         fat: this.props.mealEdit.fat,
         filePath: this.props.mealEdit.filePath,
+        isUpload:this.props.mealEdit.isUpload
       });
     }
   }
@@ -84,7 +85,7 @@ import { Slider } from 'react-native-elements';
       ],
       storageOptions: {
         skipBackup: true,
-        path: 'images',
+        path: './',
       },
     };
     ImagePicker.showImagePicker(options, response => {
@@ -94,12 +95,17 @@ import { Slider } from 'react-native-elements';
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
+        const source =  response.customButton;
+        this.setState({
+          filePath: source,
+          isUpload : true
+        });
+        // alert(response.customButton);
       } else {
+
         let source = response;
         // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+     
         this.setState({
           filePath: source,
           isUpload : true
@@ -109,14 +115,13 @@ import { Slider } from 'react-native-elements';
 
   };
   showImage = () => {
+    console.log("isUpload", this.state.isUpload)
     if (this.state.isUpload === true){
       return(
        <View>
           <Image
-       
        source={{ uri: this.state.filePath.uri }}
        style={{ width: 370, height: 250, marginTop:40 }}
-       s
        />
        </View>
       )
@@ -172,7 +177,7 @@ import { Slider } from 'react-native-elements';
                 fontSize: 25,
                 color: '#ffbf00',
                 margin: 20,
-                marginTop:40
+                marginTop:20
               }}>
               EDIT MEAL
             </Text>

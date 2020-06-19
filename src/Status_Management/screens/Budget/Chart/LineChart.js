@@ -59,7 +59,7 @@ class LineChart extends React.Component {
     };
   }
   componentDidMount() {
-    console.log('componentDidMount');
+   
     this.chart();
   }
   componentDidUpdate(prevProps, prevState) {
@@ -70,7 +70,7 @@ class LineChart extends React.Component {
          
         })
       }
-    console.log('componentDidUpdate');
+ 
     // Typical usage (don't forget to compare props):
     if (
       this.state.selectedMonth !== prevState.selectedMonth ||
@@ -80,7 +80,7 @@ class LineChart extends React.Component {
     }
   }
   componentWillMount() {
-    console.log('componentDidUpdate');
+   
     var selectedMonth = moment().format('YYYY-MM');
     
     this.setState({
@@ -95,7 +95,7 @@ class LineChart extends React.Component {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)});
     }
 
-    console.log(event.nativeEvent);
+    // console.log(event.nativeEvent);
   }
   chart = () => {
     const {budgetList} = this.props;
@@ -231,7 +231,7 @@ class LineChart extends React.Component {
 
   render() {
     const {budgetList} = this.props;
-    console.log('budgetList prop', budgetList);
+
     // {this.chart()}
     const {selectedMonth} = this.state;
    

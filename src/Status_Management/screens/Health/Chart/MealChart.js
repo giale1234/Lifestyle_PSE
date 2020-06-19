@@ -73,7 +73,7 @@ class MealChart extends React.Component {
     };
   }
   componentDidMount() {
-    console.log('componentDidMount');
+   
     this.chart();
     
   }
@@ -85,7 +85,7 @@ class MealChart extends React.Component {
         
       })
     }
-    console.log('componentDidUpdate');
+ 
     if (
       this.state.selectedMonth !== prevState.selectedMonth ||
       this.props.mealList !== prevProps.mealList
@@ -94,7 +94,7 @@ class MealChart extends React.Component {
     }
   }
   componentWillMount() {
-    console.log('componentDidUpdate');
+  
     var selectedMonth = moment().format('YYYY-MM');
     this.setState({
       selectedMonth,
@@ -108,7 +108,7 @@ class MealChart extends React.Component {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)});
     }
 
-    console.log(event.nativeEvent);
+    // console.log(event.nativeEvent);
   }
   chart = () => {
     const {mealList} = this.props;

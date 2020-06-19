@@ -50,8 +50,7 @@ class Test extends Component {
       }
     
     render(){
-        console.log("STATE TEST ", this.state)
-        console.log(" exerciseEdit ", this.props.exerciseEdit)
+       
         return (
             <View>
                 <Text>{this.state.text}</Text>   

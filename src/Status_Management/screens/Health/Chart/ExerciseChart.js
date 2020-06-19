@@ -67,7 +67,7 @@ class ExerciseChart extends React.Component {
     };
   }
   componentDidMount() {
-    console.log('componentDidMount');
+   
     this.chart();
   }
   componentDidUpdate(prevProps, prevState) {
@@ -77,7 +77,7 @@ class ExerciseChart extends React.Component {
         modalVisible:this.props.modalVisible
       })
     }
-    console.log('componentDidUpdate');
+    
    
     if (
       this.state.selectedMonth !== prevState.selectedMonth ||
@@ -173,7 +173,7 @@ class ExerciseChart extends React.Component {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)});
     }
 
-    console.log(event.nativeEvent);
+    // console.log(event.nativeEvent);
   }
   render() {
 

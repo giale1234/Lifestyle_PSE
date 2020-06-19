@@ -3,7 +3,7 @@ import * as ActionType from "./../constants/ActionType";
 
 let initialState = {
     budgetList: [],
-    budgetEdit: "",
+    budgetEdit: null,
   };
 
   const budgetReducer = (state = initialState, action) => {
