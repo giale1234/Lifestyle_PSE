@@ -7,8 +7,9 @@ let initialState = {
   };
 
   const budgetReducer = (state = initialState, action) => {
-    switch (action.type) {
-   
+  
+    switch (action.type) { 
+
       case ActionType.SUBMIT:
         if (action.budget.id) {
           //UPDATE
@@ -19,6 +20,7 @@ let initialState = {
             let budgetListUpdate = [...state.budgetList];
             budgetListUpdate[index] = action.budget;
             state.budgetList = budgetListUpdate;
+           
           }
         }else{
             //ADD
@@ -27,27 +29,29 @@ let initialState = {
           }
         return { ...state };
   
+
       case ActionType.EDIT:
           state.budgetEdit = action.budget;
           return { ...state };
       
+
       case ActionType.DELETE:
       
         let index = state.budgetList.findIndex(budget => {
         return budget.id === action.budget.id;
-      });
-      if(index !== -1){
-        let budgetListUpdate = [...state.budgetList];
-        budgetListUpdate.splice(index,1);
-        state.budgetList = budgetListUpdate;
-      }
-      
+         });
+        if(index !== -1){
+          let budgetListUpdate = [...state.budgetList];
+          budgetListUpdate.splice(index,1);
+          state.budgetList = budgetListUpdate;
+        }
       return { ...state };
       
       default:
         return { ...state };
     }
+    
   };
   
   export default budgetReducer;
-  
+

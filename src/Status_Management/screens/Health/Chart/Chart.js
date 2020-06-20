@@ -1,22 +1,14 @@
 
 
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
-  processColor,
   TouchableOpacity,
   Modal,
   Alert,
-  Image,
 } from 'react-native';
-import DatePicker from 'react-native-modern-datepicker';
-import {connect} from 'react-redux';
-
-import moment from 'moment';
-
 import {
   Container,
   Header,
@@ -27,18 +19,24 @@ import {
   Left,
   Right,
   Body,
-  SwipeRow,
 } from 'native-base';
 
+import DatePicker from 'react-native-modern-datepicker';
+import moment from 'moment';
+
+
+//Impoer Chart
 import MealChart from './MealChart'
 import ExerciseChart from './ExerciseChart'
+
 import ExerciseLineChart from './ExerciseLineChart';
 import MealLineChart from './MealLineChart';
+
+
 
 export default class Chart extends Component {
   constructor() {
     super();
-
     this.state = {
       selectedMonth: '',
       modalVisible: false,
@@ -46,7 +44,6 @@ export default class Chart extends Component {
     };
   }
   componentWillMount() {
-    console.log('componentDidUpdate');
     var selectedMonth = moment().format('YYYY-MM');
     this.setState({
       selectedMonth,
@@ -59,13 +56,12 @@ export default class Chart extends Component {
     } else {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)});
     }
-
-    // console.log(event.nativeEvent);
   }
   render() {
-    
+    const {selectedMonth, modalVisible} = this.state;
     return (
       <Container>
+        {/* Header */}
       <Header>
       <Left style={{flex: 1}}>
         <Button
@@ -88,7 +84,11 @@ export default class Chart extends Component {
         </Button>
       </Right>
     </Header>
+
+
     <Content padder> 
+
+      {/* Modal select month */}
     <Modal
       animationType="slide"
       transparent={true}
@@ -119,6 +119,8 @@ export default class Chart extends Component {
         </View>
       </View>
     </Modal>
+
+  {/* Choose month button */}
     <TouchableOpacity
       style={styles.openButton}
       onPress={() => {
@@ -132,12 +134,12 @@ export default class Chart extends Component {
       </Text>
     </TouchableOpacity>
      
-   
-     <ExerciseChart selectedMonth={this.state.selectedMonth} modalVisible={this.state.modalVisible}/>
-     <ExerciseLineChart selectedMonth={this.state.selectedMonth} modalVisible={this.state.modalVisible}/>
-     <MealChart selectedMonth={this.state.selectedMonth} modalVisible={this.state.modalVisible}/>
-     <MealLineChart  selectedMonth={this.state.selectedMonth} modalVisible={this.state.modalVisible}/>
-     </Content>
+    {/* Chart component */}
+      <ExerciseChart selectedMonth={selectedMonth} modalVisible={modalVisible}/>
+      <ExerciseLineChart selectedMonth={selectedMonth} modalVisible={modalVisible}/>
+      <MealChart selectedMonth={selectedMonth} modalVisible={modalVisible}/>
+      <MealLineChart  selectedMonth={selectedMonth} modalVisible={modalVisible}/>
+    </Content>
 
      </Container>
     )
@@ -145,16 +147,7 @@ export default class Chart extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  chart: {
-    height:300, width:300
-  },
-  // container: {
-  //   backgroundColor: "#FFF"
-  // },
+
   headerText: {
     fontWeight: 'bold',
     justifyContent: 'center',
@@ -190,37 +183,17 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontSize: 18,
-    // fontWeight: "bold",
     textAlign: 'center',
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
+
   datePicker: {
     width: 300,
   },
-  noteText: {
-    fontSize: 15,
-  },
-  text: {
-    fontSize: 20,
-    color: 'grey',
-  },
-  incomeText: {
+
+  textStyle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'green',
   },
-  expenseText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-
-    color: 'red',
-  },
-  totalText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'orange',
-  },
+ 
 });

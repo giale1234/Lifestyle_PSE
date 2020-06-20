@@ -1,17 +1,5 @@
 import React, { Component } from "react";
 import {StyleSheet,Image} from 'react-native';
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Button,
-  Icon,
-  Left,
-  Right,
-  Body,
-  Text
-} from "native-base";
 
 /* React-navigation necessities import */
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -25,7 +13,6 @@ var icon_chart = './../../../../assets/chartTab_icon.png';
 import AddStatus from './AddStatus/AddStatus';
 import ViewStatus from './ViewStatus/ViewStatus';
 import Chart from "./Chart/Chart";
-import BudgetItem from "./ViewStatus/BudgetItem";
 
 
 const Tab = createBottomTabNavigator();

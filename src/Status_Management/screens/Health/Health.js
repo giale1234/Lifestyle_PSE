@@ -27,7 +27,7 @@ import ViewStatus from './ViewStatus/ViewStatus';
 
 import Chart from "./Chart/Chart";
 import Test from "./ViewStatus/Test";
-import Test2 from "./ViewStatus/Test2"
+// import Test2 from "./ViewStatus/Test2"
 const Tab = createBottomTabNavigator();
 class Health extends Component {
   render() {
@@ -73,7 +73,7 @@ class Health extends Component {
             ),
           }}
         />
-         <Tab.Screen
+         {/* <Tab.Screen
           name="Test2"
           component={Test2}
           options={{
@@ -82,7 +82,7 @@ class Health extends Component {
               <Image source={require(icon_chart)} style={styles.iconStyle} />
             ),
           }}
-        />
+        /> */}
       </Tab.Navigator>
     );
   }

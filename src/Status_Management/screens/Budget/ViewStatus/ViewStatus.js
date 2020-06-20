@@ -1,36 +1,23 @@
 // props change does not re-render
-import React, {Component, PureComponent} from 'react';
-import {
-  StyleSheet,
-  ScrollView,
-  View,
-  Image,
-  TouchableOpacity,
-  TouchableHighlight,
-} from 'react-native';
+import React, { Component, PureComponent } from 'react';
+import { StyleSheet } from 'react-native';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
-  Container,
   Header,
   Title,
-  Content,
   Button,
   Icon,
   Left,
   Right,
   Body,
   Text,
-  Card,
-  CardItem,
-  ListItem, 
-  List
 } from 'native-base';
 
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import { Agenda } from 'react-native-calendars';
 import moment from 'moment';
-import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import Item from './BudgetItem'
+// import AsyncStorage from '@react-native-community/async-storage';
 
 class ViewStatus extends PureComponent {
   constructor(props) {
@@ -39,19 +26,28 @@ class ViewStatus extends PureComponent {
       items: {},
       currentMonth: moment().format('YYYY-MM'),
     };
-   
+
+  }
+  // Reload item when props change
+  componentDidUpdate(prevProps) {
+    if (prevProps.budgetList !== this.props.budgetList) {
+      this.loadItems();
+    }
+  }
+
+  componentDidMount() {
+    this.loadItems();
   }
 
   loadItems = () => {
-
-    let {budgetList} = this.props;
- 
+    let { budgetList } = this.props;
     for (let i = -15; i < 85; i++) {
       var timestamp = Math.floor(Date.now());
       const time = timestamp + i * 24 * 60 * 60 * 1000;
       const strTime = this.timeToString(time);
       this.state.items[strTime] = [];
       budgetList
+        // Sort budgetList by date
         .sort(
           (a, b) =>
             Date.parse(
@@ -73,12 +69,13 @@ class ViewStatus extends PureComponent {
         )
         .map(budget => {
           if (
+            //Format date YYYY-MM-DD
             budget.date
               .split('-')
               .reverse()
               .join('-') === strTime
           ) {
-            // numItems++;
+
             this.state.items[strTime].push({
               id: budget.id,
               date: strTime,
@@ -92,7 +89,7 @@ class ViewStatus extends PureComponent {
           }
         });
     }
-
+    // format the data required by Agenda library
     const newItems = {};
     Object.keys(this.state.items).forEach(key => {
       newItems[key] = this.state.items[key];
@@ -101,39 +98,18 @@ class ViewStatus extends PureComponent {
     this.setState({
       items: newItems,
     });
-    // console.log('budgetList', this.state.items);
- 
   };
-
-  componentDidUpdate(prevProps) {
-    console.log("componentDidUpdate_View")
-    if (prevProps.budgetList !== this.props.budgetList) {
-      this.loadItems();
-    }
-  }
-
-  componentDidMount() {
-    console.log("componentDidMount")
-    this.loadItems();
-  }
 
 
 
   renderItem = (item, firstItemInDay) => {
     return (
       <Item item={item} firstItemInDay={firstItemInDay}
-     navigation={this.props.navigation}
-     />
+        navigation={this.props.navigation}
+      />
     )
-     ;
+      ;
   };
-  renderEmptyDate() {
-    return (
-      <View style={styles.emptyDate}>
-        {/* <Text>This is empty date!</Text> */}
-      </View>
-    );
-  }
   rowHasChanged = (r1, r2) => {
     return (
       r1.id !== r2.id || r1.date !== r2.date || r1.amount !== r2.amount || r1.note !== r2.note || r1.category !== r2.category
@@ -146,13 +122,12 @@ class ViewStatus extends PureComponent {
   };
 
   render() {
-   
-    console.log("render")
-   console.log("this.props.budgetList",this.props.budgetList)
     return (
       <>
+
+        {/* Header */}
         <Header>
-          <Left style={{flex: 1}}>
+          <Left style={{ flex: 1 }}>
             <Button
               transparent
               onPress={() => this.props.navigation.openDrawer()}>
@@ -160,26 +135,27 @@ class ViewStatus extends PureComponent {
             </Button>
           </Left>
 
-          <Body style={{flex: 1}}>
+          <Body style={{ flex: 1 }}>
             <Title style={styles.headerText}>Budget</Title>
           </Body>
-          <Right style={{flex: 1}}>
+          <Right style={{ flex: 1 }}>
             <Button
               transparent
               onPress={() => this.props.navigation.navigate('MainTracker')}>
-              <Text style={{fontWeight: 'bold'}}>Back</Text>
+              <Text style={{ fontWeight: 'bold' }}>Back</Text>
             </Button>
           </Right>
         </Header>
 
+
+        {/* Agenda */}
         <Agenda
           items={this.state.items}
           renderItem={this.renderItem.bind(this)}
-          renderEmptyDate={this.renderEmptyDate.bind(this)}
+          // renderEmptyDate={this.renderEmptyDate.bind(this)}
           rowHasChanged={this.rowHasChanged.bind(this)}
-          // selected={this.state.currentMonth}
         />
-    
+
       </>
     );
   }
@@ -190,121 +166,16 @@ class ViewStatus extends PureComponent {
 const mapStateToProps = state => {
   return {
     budgetList: state.budgetReducer.budgetList,
-   
+
   };
 };
 export default connect(mapStateToProps, null)(ViewStatus);
 
-//
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: 'red',
-    flex: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
-    marginRight: 10,
-    justifyContent: 'center',
-    marginTop: 5,
-  },
-  emptyDate: {
-    // backgroundColor: 'green',
-    flex: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
-    marginTop: 5,
-    height: 20,
-  },
-  container: {
-    backgroundColor: '#FFF',
-  },
+
   headerText: {
     fontWeight: 'bold',
     justifyContent: 'center',
-  },
-
-  containerItem: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: 'grey',
-    height: 90,
-  },
-  image: {
-    height: 52,
-    width: 52,
-    marginLeft:15
-    
-   
-  },
-  categoryText: {
-    fontSize: 20,
-    marginHorizontal: 30,
-  },
-  noteText:{
-    fontSize: 15,
-  },
-  incomeText: {
-    fontSize: 25,
-    fontWeight:"bold",
-    color: 'green',
-  },
-  expenseText: {
-    fontSize: 25,
-    fontWeight:"bold",
-
-    color: 'red',
-  },
-  totalText: {
-    fontSize: 20,
-
-    color: 'orange',
-  },
-  text: {
-    fontSize: 20,
-    color: 'grey',
-  },
-
-  backTextWhite: {
-    color: '#FFF',
-  },
-  rowFront: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderColor: 'grey',
-    borderWidth: 1,
-    justifyContent: 'center',
-    height: 90,
-    flexDirection: 'row',
-  
-  },
-  rowBack: {
-    alignItems: 'center',
-    backgroundColor: '#F1F4F5',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 75,
-  },
-  backRightBtnLeft: {
-    backgroundColor: 'blue',
-    right: 75,
-  },
-  backRightBtnRight: {
-    backgroundColor: 'red',
-    right: 0,
-  },
-  swipeRow: {
-    width: 320,
-    margin:2,
-    elevation: 6, borderRadius: 28, marginBottom: 3, backgroundColor: 'rgba(231,76,60,1)'
   },
 });
 

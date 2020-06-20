@@ -32,15 +32,7 @@ class AddStatus extends Component {
     }
     this.updateIndex = this.updateIndex.bind(this)
   }
-   chooseType = () =>{
-    var index = this.state.selectedIndex;
-    switch (index){
-      case 0:
-        return <Exercise />; 
-      case 1:
-        return  <Meal/>;  
-    }
-  }
+
   updateIndex (selectedIndex) {
     this.setState({selectedIndex})
   }
@@ -78,11 +70,7 @@ class AddStatus extends Component {
                 buttons={buttons}
                 containerStyle={{height: 35}}
               />
-      
-    
-      
-     { this.chooseType()}
-      
+            {this.state.selectedIndex === 0 ? <Exercise /> : <Meal/>}
       
       
       </View>

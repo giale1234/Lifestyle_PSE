@@ -1,40 +1,24 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import {
   StyleSheet,
   View,
-  SafeAreaView,
-  FlatList,
   TouchableOpacity,
   Image,
-  ScrollView,
   Picker,
 } from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import moment from 'moment';
+import {Content, Button, Text, Form, Item, Label} from 'native-base';
 
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Button,
-  Icon,
-  Left,
-  Right,
-  Body,
-  Text,
-  Form,
-  Item,
-  Label,
-  Input,
-  Textarea,
-  Card,
-  CardItem,
-} from 'native-base';
+
+import DatePicker from 'react-native-datepicker';
 import {Slider} from 'react-native-elements';
 
-var icon_close = "../../../../../assets/close_icon.png"
+import * as actions from "../../../redux/actions"
+import {connect} from 'react-redux';
+import moment from 'moment';
+
+var icon_close = '../../../../../assets/close_icon.png';
+
+
 class Exercise extends Component {
   constructor(props) {
     super(props);
@@ -48,13 +32,13 @@ class Exercise extends Component {
   }
 
   componentWillMount() {
-    console.log("componentWillMount")
-    if (this.props.exerciseEdit) {
+    const {exerciseEdit} = this.props;
+    if (exerciseEdit) {
       this.setState({
-        id: this.props.exerciseEdit.id,
-        date: this.props.exerciseEdit.date,
-        duration: this.props.exerciseEdit.duration,
-        category: this.props.exerciseEdit.category,
+        id: exerciseEdit.id,
+        date: exerciseEdit.date,
+        duration: exerciseEdit.duration,
+        category: exerciseEdit.category,
       });
     }
   }
@@ -73,9 +57,8 @@ class Exercise extends Component {
       var currentDate = moment().format('DD-MM-YYYY');
 
       this.props.onSubmit(this.state);
-
       this.props.deleteExerciseEdit();
-      
+
       this.setState({
         id: '',
         date: currentDate,
@@ -83,43 +66,40 @@ class Exercise extends Component {
         category: '',
         checkedIndex: '',
       });
-   
     }
   };
 
   render() {
-
-
-    let {exerciseEdit} = this.props;
-  
     return (
       <Content padder>
+        {/* SHOW TITLE EDIT */}
         {this.props.exerciseEdit ? (
-       <View>
-            <TouchableOpacity style={{marginLeft:330, marginTop:20}} onPress={() => {
-                this.props.navigation.goBack(), this.props.deleteExerciseEdit()}}>
-            <Image source={require(icon_close)} style={{height:30, width:30}}  />
+          <View>
+            <TouchableOpacity
+              style={styles.viewIcon}
+              onPress={() => {
+                this.props.navigation.goBack(), this.props.deleteExerciseEdit();
+              }}>
+              <Image
+                source={require(icon_close)}
+                style={{height: 30, width: 30}}
+              />
             </TouchableOpacity>
             <View style={{alignItems: 'center'}}>
-            <Text
-              style={{
-                fontWeight: 'bold',
-                fontSize: 25,
-                color: '#ffbf00',
-                margin: 20,
-                marginTop:20
-              }}>
-              EDIT EXERCISE
-            </Text>
+              <Text
+                style={styles.titleEdit}>
+                EDIT EXERCISE
+              </Text>
+            </View>
           </View>
-       </View>
         ) : null}
 
+        {/* DATE SELECT */}
         <Form>
           <Item stackedLabel style={{borderColor: 'white'}}>
             <Label>Date:</Label>
             <DatePicker
-              style={{width: 300, marginTop: 10}}
+              style={styles.datepicker}
               date={this.state.date}
               mode="date"
               placeholder="select date"
@@ -147,15 +127,10 @@ class Exercise extends Component {
             />
           </Item>
         </Form>
-
+        
+         {/* DURATION INPUT */}
         <Label
-          style={{
-            color: '#fa8100',
-            fontWeight: 'bold',
-            fontSize: 20,
-            margin: 20,
-            marginTop: 30,
-          }}>
+          style={styles.label}>
           Duration (min):
         </Label>
         <Slider
@@ -164,34 +139,29 @@ class Exercise extends Component {
           step={1}
           minimumValue={0}
           maximumValue={600}
-          // maximumTrackTintColor="#FFD3B5"
           thumbTintColor="#FE4365"
           style={{margin: 10}}
         />
         <Text style={{marginLeft: 30}}>Value: {this.state.duration} min</Text>
 
-        <Label style={{color: 'grey', fontSize: 20, margin: 10}}>
+
+           {/* CATEGORY PICKER */}
+        <Label style={styles.categoryLabel}>
           Category:
         </Label>
 
-        <View style={{borderColor: 'grey', borderWidth: 1, marginLeft: 15}}>
+        <View style={styles.pickerBox}>
           <Picker
             selectedValue={this.state.category}
             onValueChange={(itemValue, itemIndex) =>
               this.setState({category: itemValue, checkedIndex: itemIndex})
             }>
-            <Picker.Item label="Select activity ..." value="" />
+            <Picker.Item label="Choose category ..." value="" />
             <Picker.Item label="🚴‍♂️  Cycling" value="🚴       Cycling" />
-            <Picker.Item
-              label="🏈  American Football"
-              value="🏈       American Football"
-            />
+            <Picker.Item label="🏈  American Football"  value="🏈       American Football"/>
             <Picker.Item label="🏸 Badminton" value="🏸       Badminton" />
             <Picker.Item label="🏀  Basketball" value="🏀       Basketball" />
-            <Picker.Item
-              label="🥊  Boxing Glove"
-              value="🥊       Boxing Glove"
-            />
+            <Picker.Item label="🥊  Boxing Glove"  value="🥊       Boxing Glove"/>
             <Picker.Item label="🎳  Bowling" value="🎳       Bowling" />
             <Picker.Item label="🧗‍♂️ Climbing" value="🧗‍♂️       Climbing" />
             <Picker.Item label="💃  Dancing" value="💃       Dancing" />
@@ -199,36 +169,36 @@ class Exercise extends Component {
             <Picker.Item label="🏌️  Golf" value="🏌️       Golf" />
             <Picker.Item label="🏋️‍♂️  Gym" value="🏋️       Gym‍" />
             <Picker.Item label="🏓  Ping Pong" value="🏓       Ping Pong" />
-            <Picker.Item
-              label="🏇  Horse Racing"
-              value="🏇       HorseRacing"
-            />
+            <Picker.Item label="🏇  Horse Racing" value="🏇       HorseRacing"/>
             <Picker.Item label="🚣  Rowing Boat" value="🚣       RowingBoat" />
             <Picker.Item label="🏃🏿‍♂️  Running" value="🏃🏿‍♂️       Running" />
             <Picker.Item label="🏐  Volleyball" value="🏐       Voleyball" />
             <Picker.Item label="🚶 Walking" value="🚶       Walking" />
             <Picker.Item label="🏊‍♂️  Swimming" value="🏊‍♂️       Swimming" />
             <Picker.Item label="🏄  Surfing" value="🏄       Surfing" />
-            <Picker.Item
-              label="🏂   Snowboarder"
-              value="🏂       Snowboarder"
-            />
+            <Picker.Item label="🏂   Snowboarder" value="🏂       Snowboarder"/>
             <Picker.Item label="🧘  Yoga" value="🧘       Yoga" />
           </Picker>
         </View>
 
+
+
+          {/* BUTTON FOR EDIT FORM */}
         {this.props.exerciseEdit ? (
-          <View style={{flexDirection: 'row', justifyContent:"center"}}>
+          <View style={styles.viewbtnEdit}>
             <Button
               block
-              style={{margin: 15, marginTop: 50}}
-              onPress={ () => {this.handleOnSubmit(); this.props.deleteExerciseEdit();this.props.navigation.goBack()} }
-              >
+              style={styles.btnEdit}
+              onPress={() => {
+                this.handleOnSubmit();
+                this.props.deleteExerciseEdit();
+                this.props.navigation.goBack();
+              }}>
               <Text>SUBMIT</Text>
             </Button>
             <Button
               block
-              style={{margin: 15, marginTop: 50}}
+              style={styles.btnEdit}
               onPress={() => {
                 this.props.navigation.goBack(), this.props.deleteExerciseEdit();
               }}>
@@ -238,32 +208,23 @@ class Exercise extends Component {
         ) : (
           <Button
             block
-            style={{margin: 15, marginTop: 50}}
+            style={styles.btnSubmit}
             onPress={this.handleOnSubmit}>
             <Text>SUBMIT</Text>
           </Button>
         )}
-
-        
       </Content>
     );
   }
 }
+
 const mapDispatchToProps = dispatch => {
   return {
     onSubmit: exercise => {
-      let action = {
-        type: 'SUBMIT_E',
-        exercise,
-      };
-      dispatch(action);
+      dispatch(actions.actSubmitExercise(exercise));
     },
     deleteExerciseEdit: () => {
-      let action = {
-        type: 'EDIT_E',
-        exercise: null,
-      };
-      dispatch(action);
+      dispatch(actions.actEditExercise(null));
     },
   };
 };
@@ -273,54 +234,37 @@ const mapStateToProps = state => {
     exerciseEdit: state.exerciseReducer.exerciseEdit,
   };
 };
-
 export default connect(mapStateToProps, mapDispatchToProps)(Exercise);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  groupBox: {
-    flexDirection: 'row',
+  viewIcon:{marginLeft: 330, marginTop: 20},
+  titleEdit:{
+    fontWeight: 'bold',
+    fontSize: 25,
+    color: '#ffbf00',
+    margin: 20,
     marginTop: 20,
   },
-  flatlist: {
-    marginLeft: -10,
-  },
-  item: {
-    backgroundColor: 'white',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    width: 100,
-    height: 100,
-    borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 13,
-  },
-  image: {
-    height: 52,
-    width: 52,
-  },
-  title: {
-    fontSize: 10,
-    textAlign: 'center',
-    margin: 5,
-  },
-  button: {
-    borderColor: 'red',
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: 'orange',
-    width: 150,
-    height: 45,
-    marginLeft: 220,
-    marginTop: 10,
-  },
-  textbtn: {
+  datepicker:{width: 300, marginTop: 10},
+  label:{
+    color: '#fa8100',
+    fontWeight: 'bold',
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    margin: 20,
+    marginTop: 30,
+  },
+  categoryLabel:{color: 'grey', fontSize: 20, margin: 10},
+  pickerBox:{borderColor: 'grey', borderWidth: 1, marginLeft: 15},
+  viewbtnEdit: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  btnEdit: {
+    margin: 15,
+    marginTop: 50,
+  },
+  btnSubmit: {
+    margin: 15,
+    marginTop: 50,
   },
 });

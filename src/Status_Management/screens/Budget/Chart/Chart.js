@@ -1,22 +1,13 @@
-
-
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
-  processColor,
   TouchableOpacity,
   Modal,
   Alert,
   Image,
 } from 'react-native';
-import DatePicker from 'react-native-modern-datepicker';
-import {connect} from 'react-redux';
-
-import moment from 'moment';
-
 import {
   Container,
   Header,
@@ -27,8 +18,14 @@ import {
   Left,
   Right,
   Body,
-  SwipeRow,
+
 } from 'native-base';
+
+import DatePicker from 'react-native-modern-datepicker';
+import moment from 'moment';
+
+
+{/*Import component*/}
 import PieChart from './PieChart';
 import LineChart  from "./LineChart"
 
@@ -36,20 +33,14 @@ import LineChart  from "./LineChart"
 export default class Chart extends Component {
   constructor() {
     super();
-
     this.state = {
-      selectedMonth: '',
+      selectedMonth: moment().format('YYYY-MM'),
       modalVisible: false,
      
     };
   }
-  componentWillMount() {
-    
-    var selectedMonth = moment().format('YYYY-MM');
-    this.setState({
-      selectedMonth,
-    });
-  }
+
+  
   handleSelect(event) {
     let entry = event.nativeEvent;
     if (entry == null) {
@@ -57,13 +48,12 @@ export default class Chart extends Component {
     } else {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)});
     }
-
-    // console.log(event.nativeEvent);
   }
   render() {
-    
+    const {selectedMonth, modalVisible} = this.state;
     return (
       <Container>
+      {/* Header */}
       <Header>
       <Left style={{flex: 1}}>
         <Button
@@ -86,6 +76,8 @@ export default class Chart extends Component {
         </Button>
       </Right>
     </Header>
+
+      {/* Modal select month */}
     <Content padder> 
     <Modal
       animationType="slide"
@@ -117,6 +109,8 @@ export default class Chart extends Component {
         </View>
       </View>
     </Modal>
+
+    {/* Choose month button */}
     <TouchableOpacity
       style={styles.openButton}
       onPress={() => {
@@ -130,10 +124,11 @@ export default class Chart extends Component {
       </Text>
     </TouchableOpacity>
      
-   
-     <PieChart selectedMonth={this.state.selectedMonth} modalVisible={this.state.modalVisible} typePieChart={"Income"}/>
-    <LineChart selectedMonth={this.state.selectedMonth} modalVisible={this.state.modalVisible} typePieChart={"Income"}/>
-     <PieChart selectedMonth={this.state.selectedMonth} modalVisible={this.state.modalVisible} typePieChart={"Expense"}/>
+    {/* Chart component */}
+     <PieChart selectedMonth={selectedMonth} modalVisible={modalVisible} typePieChart={"Income"}/>
+     <LineChart selectedMonth={selectedMonth} modalVisible={modalVisible} typePieChart={"Income"}/>
+     <PieChart selectedMonth={selectedMonth} modalVisible={modalVisible} typePieChart={"Expense"}/>
+     <LineChart selectedMonth={selectedMonth} modalVisible={modalVisible} typePieChart={"Expense"}/>
      </Content>
 
      </Container>
@@ -142,16 +137,7 @@ export default class Chart extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  chart: {
-    height:300, width:300
-  },
-  // container: {
-  //   backgroundColor: "#FFF"
-  // },
+
   headerText: {
     fontWeight: 'bold',
     justifyContent: 'center',
@@ -187,7 +173,6 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontSize: 18,
-    // fontWeight: "bold",
     textAlign: 'center',
   },
   modalText: {

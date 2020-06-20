@@ -1,67 +1,175 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet,Image} from 'react-native';
+import React, { Component } from 'react'
+import { StatusBar } from 'react-native'
+import {  Text, View, TextInput, StyleSheet } from 'react-native'
+import { Button } from 'native-base';
+import AsyncStorage from '@react-native-community/async-storage';
+import { tsObjectKeyword } from '@babel/types';
 
-import {TouchableOpacity, ScrollView} from 'react-native-gesture-handler';
-import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
-import moment from 'moment';
-import {connect} from 'react-redux';
-import DatePicker from 'react-native-datepicker';
-import {
-    Container,
-    Header,
-    Title,
-    Content,
-    Button,
-    Icon,
-    Left,
-    Right,
-    Body,
-    Card,
-    CardItem,
-    ListItem, 
-    List
-  } from 'native-base';
+let obj = [
+    {
+        name: 'Gia Le',
+        age: 18,
+        
+    },
+    {
+        name: 'Chris',
+        age: 30,
+        
+    },
+    
+];
 
 class Test extends Component {
-    constructor(props) {
+    constructor(props){
         super(props);
         this.state = {
-            text: ""
-        };    
+           obj:[] 
+        }
+    }
+    componentDidMount(){
+        this.getStorage()
+    }
+    buttonClick = () => {
+       this.saveStorage();
+    //    console.log("this.state", this.state)
+    }
+    saveStorage = async() => {
+        const jsonValue = JSON.stringify(obj)
+        await AsyncStorage.setItem('obj', jsonValue)
     }
     
-    // UNSAFE_componentWillReceiveProp(nextProps) {
-    //   console.log("UNSAFE_componentWillReceiveProps")
-    //   if (nextProps && nextProps.exerciseEdit) {
-    //     this.setState({
-    //         text: nextProps.exerciseEdit
-    //     });
-        
-    //   } 
-    // }
-    componentWillMount() {
-        // console.log("UNSAFE_componentWillReceiveProps")
-        // if (this.props.exerciseEdit !== prevProps.exerciseEdit ) {
-          this.setState({
-              text: this.props.exerciseEdit
-          });
-          
-        // } 
-      }
-    
-    render(){
+    getStorage = async() => {
+       if(AsyncStorage.getItem("obj")){
+        var obj = await AsyncStorage.getItem("obj");
+        this.setState({
+             obj,
+        })
        
-        return (
-            <View>
-                <Text>{this.state.text}</Text>   
-            </View>
-        )
+       }
+       console.log("this.state.obj",this.state.obj)
+     
     }
-}
-const mapStateToProps = state => {
-    return {
-        exerciseEdit: state.exerciseReducer.exerciseEdit
-    };
-  };
+    
+   render() {
 
-  export default connect(mapStateToProps, null)(Test);
+ 
+      return (
+         <View style = {styles.container}>
+            {/* <TextInput style = {styles.textInput} autoCapitalize = 'none'
+            onChangeText = {this.setName}/> */}
+
+        <Button onPress={this.buttonClick}><Text>OK</Text></Button>
+               
+                <Text>{obj[1].name}</Text>
+                   
+         </View>
+
+      )
+   }
+}
+export default Test
+
+
+
+const styles = StyleSheet.create ({
+   container: {
+      flex: 1,
+      alignItems: 'center',
+      marginTop: 50
+   },
+   textInput: {
+      margin: 5,
+      height: 40,
+      width:300,
+      borderColor:"grey",
+      borderWidth:1
+   }
+})
+
+// import React, { Component } from 'react'
+// import { StatusBar } from 'react-native'
+// import {  Text, View, TextInput, StyleSheet } from 'react-native'
+// import { Button } from 'native-base';
+// import AsyncStorage from '@react-native-community/async-storage';
+// import { tsObjectKeyword } from '@babel/types';
+
+// let obj = [
+//     {
+//         name: 'Gia Le',
+//         age: 18,
+        
+//     },
+//     {
+//         name: 'Chris',
+//         age: 30,
+        
+//     },
+    
+// ];
+
+// class Test extends Component {
+//     constructor(props){
+//         super(props);
+//         this.state = {
+//            obj:[] 
+//         }
+//     }
+//     componentDidMount(){
+//         this.getStorage()
+//     }
+//     buttonClick = () => {
+//        this.saveStorage();
+//     //    console.log("this.state", this.state)
+//     }
+//     saveStorage = async() => {
+//         const jsonValue = JSON.stringify(obj)
+//         await AsyncStorage.setItem('obj', jsonValue)
+//     }
+    
+//     getStorage = async() => {
+//        if(AsyncStorage.getItem("obj")){
+//         var obj = await AsyncStorage.getItem("obj");
+//         this.setState({
+//              obj,
+//         })
+       
+//        }
+//        console.log("this.state.obj",this.state.obj)
+     
+//     }
+    
+//    render() {
+
+ 
+//       return (
+//          <View style = {styles.container}>
+//             {/* <TextInput style = {styles.textInput} autoCapitalize = 'none'
+//             onChangeText = {this.setName}/> */}
+
+//         <Button onPress={this.buttonClick}><Text>OK</Text></Button>
+               
+//                 <Text>{obj[1].name}</Text>
+                   
+//          </View>
+
+//       )
+//    }
+// }
+// export default Test
+
+
+
+// const styles = StyleSheet.create ({
+//    container: {
+//       flex: 1,
+//       alignItems: 'center',
+//       marginTop: 50
+//    },
+//    textInput: {
+//       margin: 5,
+//       height: 40,
+//       width:300,
+//       borderColor:"grey",
+//       borderWidth:1
+//    }
+// })

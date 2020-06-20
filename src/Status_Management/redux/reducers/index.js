@@ -4,11 +4,9 @@ import exerciseReducer from "./exerciseReducer"
 import mealReducer from "./mealReducer"
 
 const rootReducer = combineReducers({
-
     budgetReducer ,
     exerciseReducer,
     mealReducer
-
 });
 
 export default rootReducer;

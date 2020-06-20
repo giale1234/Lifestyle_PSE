@@ -9,7 +9,7 @@ let initialState = {
   const mealReducer = (state = initialState, action) => {
     switch (action.type) {
    
-      case "SUBMIT_M":
+      case ActionType.SUBMIT_M:
         if (action.meal.id) {
           //UPDATE
           let index = state.mealList.findIndex(meal => {
@@ -27,11 +27,11 @@ let initialState = {
           }
         return { ...state };
   
-      case "EDIT_M":
+      case ActionType.EDIT_M:
           state.mealEdit = action.meal;
           return { ...state };
       
-      case "DELETE_M":
+      case ActionType.DELETE_M:
       
         let index = state.mealList.findIndex(meal => {
         return meal.id === action.meal.id;

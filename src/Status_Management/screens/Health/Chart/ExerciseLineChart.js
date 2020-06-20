@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
@@ -11,9 +10,8 @@ import {BarChart} from 'react-native-charts-wrapper';
 import {connect} from 'react-redux';
 class ExerxiseLineChart extends React.Component {
 
-  constructor() {
-    super();
-
+  constructor(props) {
+    super(props);
     this.state = {
     selectedMonth: '',
     modalVisible: false,
@@ -37,50 +35,40 @@ class ExerxiseLineChart extends React.Component {
     };
   }
   componentDidMount() {
-  
-    this.chart();
+    this.loadData();
   }
   componentDidUpdate(prevProps, prevState) {
+     //Select month
     if(this.state.selectedMonth !== prevProps.selectedMonth){
       this.setState({
         selectedMonth:this.props.selectedMonth,
         modalVisible:this.props.modalVisible
       })
     }
-  
-   
+  //props change
     if (
       this.state.selectedMonth !== prevState.selectedMonth ||
       this.props.exerciseList !== prevProps.exerciseList
     ) {
-      this.chart();
+      this.loadData();
     }
   }
-  timeToString = time => {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  };
-  chart = () => {
+  
+  loadData = () => {
     const {exerciseList} = this.props;
     const {selectedMonth} = this.state;
  
     let index = {};
-    
- 
     let valueChart = [];
-    var firstDayOfMonth = '1-' + selectedMonth.split('-').reverse().join('-');
 
-    
     exerciseList
     .filter(exercise => selectedMonth === exercise.date.split('-') .reverse() .join('-').split('-', 2).join('-'))
     .map(
         exercise => {
-  
         if (!index[exercise.date]) {
             index[exercise.date] = {
               y: Number(exercise.duration),
-              x: Number(exercise.date.split("-",1)) - 1
-             
+              x: Number(exercise.date.split("-",1)) - 1       
             };
           } else {
             index[exercise.date].y =
@@ -148,8 +136,6 @@ class ExerxiseLineChart extends React.Component {
     } else {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
     }
-
-    // console.log("event.nativeEvent",event.nativeEvent)
   }
 
   render() {
@@ -172,7 +158,6 @@ class ExerxiseLineChart extends React.Component {
             onSelect={this.handleSelect.bind(this)}
             highlights={this.state.highlights}
             onChange={(event) => console.log(event.nativeEvent)}
-          
             yAxis={{ 
               left: { drawGridLines: false},
               right: { drawGridLines: false},
@@ -184,93 +169,18 @@ class ExerxiseLineChart extends React.Component {
     );
   }
 }
-
 const mapStateToProps = state => {
     return {
       exerciseList: state.exerciseReducer.exerciseList,
     
     };
   };
-  export default connect(mapStateToProps, null)(ExerxiseLineChart);
+export default connect(mapStateToProps, null)(ExerxiseLineChart);
   
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
+   
     chart: {
       height:250
-    },
-    // container: {
-    //   backgroundColor: "#FFF"
-    // },
-    headerText: {
-      fontWeight: 'bold',
-      justifyContent: 'center',
-    },
-    centeredView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 22,
-    },
-    modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    },
-    openButton: {
-      backgroundColor: 'orange',
-      borderWidth: 3,
-      borderColor: '#222224',
-      borderColor: 5,
-      padding: 10,
-      elevation: 2,
-    },
-    textStyle: {
-      fontSize: 18,
-      // fontWeight: "bold",
-      textAlign: 'center',
-    },
-    modalText: {
-      marginBottom: 15,
-      textAlign: 'center',
-    },
-    datePicker: {
-      width: 300,
-    },
-    noteText: {
-      fontSize: 15,
-    },
-    text: {
-      fontSize: 20,
-      color: 'grey',
-    },
-    incomeText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: 'green',
-    },
-    expenseText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-  
-      color: 'red',
-    },
-    totalText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: 'orange',
     },
   });
   

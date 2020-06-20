@@ -9,7 +9,7 @@ let initialState = {
   const exerciseReducer = (state = initialState, action) => {
     switch (action.type) {
    
-      case "SUBMIT_E":
+      case ActionType.SUBMIT_E:
         if (action.exercise.id) {
           //UPDATE
           let index = state.exerciseList.findIndex(exercise => {
@@ -28,11 +28,11 @@ let initialState = {
          }
         return { ...state };
   
-      case "EDIT_E":
+      case ActionType.EDIT_E:
           state.exerciseEdit = action.exercise;
           return { ...state };
       
-      case "DELETE_E":
+      case ActionType.DELETE_E:
         let index = state.exerciseList.findIndex(exercise => {
         return exercise.id === action.exercise.id;
         });

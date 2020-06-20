@@ -52,7 +52,7 @@ const Stack = createStackNavigator();
 function StackNavigator() {
   return(
     <Stack.Navigator
-      initialRouteName = 'Tracker'
+      initialRouteName = 'Home'
       headerMode = 'none'
     >
       <Stack.Screen name = 'Splash' component = {SplashScreen}/>

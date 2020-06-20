@@ -1,79 +1,59 @@
 
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  SafeAreaView,
-  FlatList,
   TouchableOpacity,
   Image,
-  ScrollView,
-  Picker,
-  
 } from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import moment from 'moment'; 
-import RNPickerSelect from 'react-native-picker-select';
-import ImagePicker from 'react-native-image-picker';
-
-const options = {
-    title: 'Select Avatar',
-    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
-  var icon_close = "../../../../../assets/close_icon.png"
-  
 import {
-  Container,
-  Header,
-  Title,
   Content,
   Button,
-  Icon,
-  Left,
-  Right,
-  Body,
   Text,
   Form,
   Item,
   Label,
   Input,
-  Textarea,
-  Card,
-  CardItem,
 } from 'native-base';
+
+import DatePicker from 'react-native-datepicker';
+import ImagePicker from 'react-native-image-picker';
 import { Slider } from 'react-native-elements';
 
- class Meal extends Component {
+import * as actions from "../../../redux/actions"
+import { connect } from 'react-redux';
+import moment from 'moment';
+
+
+var icon_close = "../../../../../assets/close_icon.png"
+
+class Meal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       id: '',
-      date:  moment().format('DD-MM-YYYY'),
-      name: '',  
+      date: moment().format('DD-MM-YYYY'),
+      name: '',
       carb: 0,
-      protein:0,
-      fat:0, 
+      protein: 0,
+      fat: 0,
       filePath: {},
       isUpload: false
     };
-  
+
   }
   componentWillMount() {
-    if (this.props.mealEdit) {
+    const {mealEdit} = this.props;
+    if (mealEdit) {
       this.setState({
-        id: this.props.mealEdit.id,
-        date: this.props.mealEdit.date,
-        name: this.props.mealEdit.name,
-        carb: this.props.mealEdit.carb,
-        protein: this.props.mealEdit.protein,
-        fat: this.props.mealEdit.fat,
-        filePath: this.props.mealEdit.filePath,
-        isUpload:this.props.mealEdit.isUpload
+        id: mealEdit.id,
+        date: mealEdit.date,
+        name: mealEdit.name,
+        carb: mealEdit.carb,
+        protein: mealEdit.protein,
+        fat: mealEdit.fat,
+        filePath: mealEdit.filePath,
+        isUpload: mealEdit.isUpload
       });
     }
   }
@@ -95,20 +75,16 @@ import { Slider } from 'react-native-elements';
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
-        const source =  response.customButton;
+        const source = response.customButton;
         this.setState({
           filePath: source,
-          isUpload : true
+          isUpload: true
         });
-        // alert(response.customButton);
       } else {
-
         let source = response;
-        // You can also display the image using data:
-     
         this.setState({
           filePath: source,
-          isUpload : true
+          isUpload: true
         });
       }
     });
@@ -116,32 +92,32 @@ import { Slider } from 'react-native-elements';
   };
   showImage = () => {
     console.log("isUpload", this.state.isUpload)
-    if (this.state.isUpload === true){
-      return(
-       <View>
+    if (this.state.isUpload === true) {
+      return (
+        <View>
           <Image
-       source={{ uri: this.state.filePath.uri }}
-       style={{ width: 370, height: 250, marginTop:40 }}
-       />
-       </View>
+            source={{ uri: this.state.filePath.uri }}
+            style={styles.imageUpload}
+          />
+        </View>
       )
     }
-   
+
   }
-  handleOnChange = (text,name) => {
+  handleOnChange = (text, name) => {
     this.setState({
       [name]: text,
     });
 
   };
   handleOnSubmit = () => {
-    if (this.state.name === '' ){
+    if (this.state.name === '') {
       alert('Please enter name !!!')
-    }else if (this.state.carb === '' || this.state.protein === ''||this.state.fat === '' ){
+    } else if (this.state.carb === '' || this.state.protein === '' || this.state.fat === '') {
       alert('Please choose nutrition intake !!!')
-    }else{
+    } else {
       var currentDate = moment().format("DD-MM-YYYY");
-    
+
       this.props.onSubmit(this.state);
       this.props.deleteMealEdit();
       this.setState({
@@ -149,8 +125,8 @@ import { Slider } from 'react-native-elements';
         date: currentDate,
         name: '',
         carb: 0,
-        protein:0,
-        fat:0, 
+        protein: 0,
+        fat: 0,
         filePath: {},
       })
     }
@@ -158,38 +134,32 @@ import { Slider } from 'react-native-elements';
 
 
   render() {
-    var {mealEdit} = this.props;
-     console.log("mealEdit", this.props.mealEdit)
-    
-   
-    return (
-      <Content padder style={{backgroundColor:"white"}}>
-         {this.props.mealEdit ? (
-       <View>
-            <TouchableOpacity style={{marginLeft:330, marginTop:20}} onPress={() => {
-                this.props.navigation.goBack(), this.props.deleteMealEdit()}}>
-            <Image source={require(icon_close)} style={{height:30, width:30}}  />
-            </TouchableOpacity>
-            <View style={{alignItems: 'center'}}>
-            <Text
-              style={{
-                fontWeight: 'bold',
-                fontSize: 25,
-                color: '#ffbf00',
-                margin: 20,
-                marginTop:20
-              }}>
-              EDIT MEAL
-            </Text>
-          </View>
-       </View>
-        ) : null}
 
+    return (
+      <Content padder style={{ backgroundColor: "white" }}>
+
+         {/* SHOW TITLE EDIT */}
+        {this.props.mealEdit ? (
+          <View>
+            <TouchableOpacity style={styles.viewIcon} onPress={() => {
+              this.props.navigation.goBack(), this.props.deleteMealEdit()
+            }}>
+              <Image source={require(icon_close)} style={{ height: 30, width: 30 }} />
+            </TouchableOpacity>
+            <View style={{ alignItems: 'center' }}>
+              <Text
+                style={styles.titleEdit}>
+                EDIT MEAL
+            </Text>
+            </View>
+          </View>
+        ) : null}
+        {/* DATE SELECT */}
         <Form>
-          <Item stackedLabel style={{borderColor: 'white'}}>
+          <Item stackedLabel style={{ borderColor: 'white' }}>
             <Label>Date:</Label>
             <DatePicker
-              style={{width: 300, marginTop: 10}}
+              style={styles.datepicker}
               date={this.state.date}
               mode="date"
               placeholder="select date"
@@ -208,117 +178,119 @@ import { Slider } from 'react-native-elements';
                 dateInput: {
                   marginLeft: -30,
                 },
-                // ... You can check the source to find the other keys.
               }}
               onDateChange={date => {
-                this.setState({date: date});
+                this.setState({ date: date });
               }}
               androidMode="spinner"
             />
           </Item>
         </Form>
 
+        {/* NAME INPUT */}
+
         <Form>
           <Item stackedLabel>
             <Label>Name: </Label>
-            <Item regular style={{marginTop: 10}}>
+            <Item regular style={{ marginTop: 10 }}>
               <Input
-                style={{height: 45}}
+                style={{ height: 45 }}
                 placeholder="Name ...."
                 // onChangeText={(text) => this.handleOnChange(text,'name')}
-                 onChangeText={(text) => this.setState({name:text})}
+                onChangeText={(text) => this.setState({ name: text })}
                 value={this.state.name}
                 name="name"
               />
             </Item>
           </Item>
         </Form>
-        
+
+        {/* UPLOAD IMAGE */}
         <View style={styles.container}>
-        <View style={styles.container}>
-       
-          {this.showImage()}
-          
-         
-        <View  style={{flexDirection:"row", margin:20, alignItems:"center"}}>
-          <Label>Image: </Label>
-        <TouchableOpacity onPress={this.chooseFile.bind(this)} style={{borderColor:"grey", borderWidth:1, borderRadius:5, height:35, width:100, alignItems:"center", justifyContent:"center", marginLeft:20}}> 
-            <Text >Choose File</Text>
-          </TouchableOpacity>
+          <View style={styles.container}>
+
+            {this.showImage()}
+
+            <View style={styles.viewbtnUpload}>
+              <Label>Image: </Label>
+              <TouchableOpacity onPress={this.chooseFile.bind(this)} style={styles.btnUpload}>
+                <Text >Choose File</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        </View>
-      </View>
 
 
-        
-        <Label style={{color: '#fa8100',fontWeight:"bold", fontSize: 20, margin: 20, marginTop:30}}>
+        {/* NUTRITION INPUT */}
+        <Label style={styles.labelNutri}>
           CARB (g):
         </Label>
-     
-        <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
-            <Slider
-                value={this.state.carb}
-                onValueChange={value => this.setState({carb: value })}
-                step={1}
-                minimumValue={0}
-                maximumValue={100}
-                maximumTrackTintColor="#FFD3B5"
-                thumbTintColor="#FE4365"
-                style={{margin:10}}
-            />
-            <Text>Value: {this.state.carb}</Text>
-            </View>
 
-            <Label style={{color: '#fa8100',fontWeight:"bold", fontSize: 20, margin:20}}>
+        <View style={styles.viewSlider}>
+          <Slider
+            value={this.state.carb}
+            onValueChange={value => this.setState({ carb: value })}
+            step={1}
+            minimumValue={0}
+            maximumValue={100}
+            maximumTrackTintColor="#FFD3B5"
+            thumbTintColor="#FE4365"
+            style={styles.slider}
+          />
+          <Text>Value: {this.state.carb}</Text>
+        </View>
+
+        <Label style={styles.labelNutri}>
           PROTEIN (g):
         </Label>
-     
-        <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
-            <Slider
-                value={this.state.protein}
-                onValueChange={value => this.setState({protein: value })}
-                step={1}
-                minimumValue={0}
-                maximumValue={100}
-                maximumTrackTintColor="#FFD3B5"
-                thumbTintColor="#FE4365"
-                style={{margin:10}}
-               
-            />
-            <Text >Value: {this.state.protein}</Text>
-            </View>
+
+        <View style={styles.viewSlider}>
+          <Slider
+            value={this.state.protein}
+            onValueChange={value => this.setState({ protein: value })}
+            step={1}
+            minimumValue={0}
+            maximumValue={100}
+            maximumTrackTintColor="#FFD3B5"
+            thumbTintColor="#FE4365"
+            style={styles.slider}
+
+          />
+          <Text >Value: {this.state.protein}</Text>
+        </View>
 
 
-            <Label style={{color: '#fa8100',fontWeight:"bold", fontSize: 20, margin: 20}}>
+        <Label style={styles.labelNutri}>
           FAT (g):
         </Label>
-     
-        <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
-            <Slider
-                value={this.state.fat}
-                onValueChange={value => this.setState({ fat:value })}
-                step={1}
-                minimumValue={0}
-                maximumValue={100}
-                maximumTrackTintColor="#FFD3B5"
-                thumbTintColor="#FE4365"
-                style={{margin:10}}
-            />
-            <Text>Value: {this.state.fat}</Text>
-            </View>
 
-         {this.props.mealEdit ? (
-          <View style={{flexDirection: 'row', justifyContent:"center"}}>
+        <View style={styles.viewSlider}>
+          <Slider
+            value={this.state.fat}
+            onValueChange={value => this.setState({ fat: value })}
+            step={1}
+            minimumValue={0}
+            maximumValue={100}
+            maximumTrackTintColor="#FFD3B5"
+            thumbTintColor="#FE4365"
+            style={styles.slider}
+          />
+          <Text>Value: {this.state.fat}</Text>
+        </View>
+
+      {/* BUTTON FOR EDIT FORM */}  
+        {this.props.mealEdit ? (
+          <View style={styles.viewbtnEdit}>
             <Button
               block
-              style={{margin: 15, marginTop: 50}}
-              onPress={ () => {this.handleOnSubmit(); this.props.deleteMealEdit();this.props.navigation.goBack()} }
-              >
+              style={styles.btnEdit}
+              onPress={() => { this.handleOnSubmit(); this.props.deleteMealEdit(); this.props.navigation.goBack() }}
+            >
               <Text>SUBMIT</Text>
             </Button>
             <Button
               block
-              style={{margin: 15, marginTop: 50}}
+              style={styles.btnEdit}
               onPress={() => {
                 this.props.navigation.goBack(), this.props.deleteMealEdit();
               }}>
@@ -326,98 +298,55 @@ import { Slider } from 'react-native-elements';
             </Button>
           </View>
         ) : (
-          <Button
-            block
-            style={{margin: 15, marginTop: 50}}
-            onPress={this.handleOnSubmit}>
-            <Text>SUBMIT</Text>
-          </Button>
-        )} 
-
-
-       
-
-      
+            <Button
+              block
+              style={styles.btnSubmit}
+              onPress={this.handleOnSubmit}>
+              <Text>SUBMIT</Text>
+            </Button>
+          )}
       </Content>
-   
-            
-       
     );
   }
 }
 const mapDispatchToProps = dispatch => {
-    return {
-      onSubmit: meal => {
-        let action = {
-          type: 'SUBMIT_M',
-          meal,
-        };
-        dispatch(action);
-      },
-      deleteMealEdit: () => {
-        let action = {
-          type: 'EDIT_M',
-          exercise: null,
-        };
-        dispatch(action);
-      },
-    };
+  return {
+    onSubmit: meal => {
+      dispatch(actions.actSubmitMeal(meal));
+    },
+    deleteMealEdit: () => {
+      dispatch(actions.actEditMeal(null));
+    },
   };
-  
-  const mapStateToProps = state => {
-    return {
-      mealEdit: state.mealReducer.mealEdit
-    };
+};
+
+const mapStateToProps = state => {
+  return {
+    mealEdit: state.mealReducer.mealEdit
   };
-  export default connect(mapStateToProps, mapDispatchToProps)(Meal);
-  
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Meal);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
   },
-  groupBox: {
-    flexDirection: 'row',
+  imageUpload:{ width: 370, height: 250, marginTop: 40 },
+  viewIcon:{marginLeft: 330, marginTop: 20},
+  titleEdit:{
+    fontWeight: 'bold',
+    fontSize: 25,
+    color: '#ffbf00',
+    margin: 20,
     marginTop: 20,
   },
-  flatlist: {
-    marginLeft: -10,
-  },
-  item: {
-    backgroundColor: 'white',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    width: 100,
-    height: 100,
-    borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 13,
-  },
-  image: {
-    height: 52,
-    width: 52,
-  },
-  title: {
-    fontSize: 10,
-    textAlign: 'center',
-    margin: 5,
-  },
-  button: {
-    borderColor: 'red',
-    borderWidth: 1,
-    borderRadius: 10,
-    backgroundColor: 'orange',
-    width: 150,
-    height: 45,
-    marginLeft: 220,
-    marginTop: 10,
-  },
-  textbtn: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
+  datepicker:{width: 300, marginTop: 10},
+  viewbtnUpload:{ flexDirection: "row", margin: 20, alignItems: "center" },
+  btnUpload:{ borderColor: "grey", borderWidth: 1, borderRadius: 5, height: 35, width: 100, alignItems: "center", justifyContent: "center", marginLeft: 20 },
+  labelNutri:{ color: '#fa8100', fontWeight: "bold", fontSize: 20, margin: 20, marginTop: 30 },
+  viewSlider:{ flex: 1, alignItems: 'stretch', justifyContent: 'center' },
+  slider:{ margin: 10 }
 });
 
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
@@ -11,9 +10,8 @@ import {BarChart} from 'react-native-charts-wrapper';
 import {connect} from 'react-redux';
 class MealLineChart extends React.Component {
 
-  constructor() {
-    super();
-
+  constructor(props) {
+    super(props);
     this.state = {
     selectedMonth: '',
       modalVisible: false,
@@ -44,58 +42,47 @@ class MealLineChart extends React.Component {
     };
   }
   componentDidMount() {
-
-    this.chart();
+    this.loadData();
   }
   componentDidUpdate(prevProps, prevState) {
+    //Select month
     if(this.state.selectedMonth !== prevProps.selectedMonth){
       this.setState({
         selectedMonth:this.props.selectedMonth,
         modalVisible:this.props.modalVisible
       })
     }
-  
-   
+   //props change
     if (
       this.state.selectedMonth !== prevState.selectedMonth ||
       this.props.mealList !== prevProps.mealList
     ) {
-      this.chart();
+      this.loadData();
     }
   }
-  timeToString = time => {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  };
-  chart = () => {
+
+  loadData = () => {
     const {mealList} = this.props;
     const {selectedMonth} = this.state;
  
     let index = {};
-    
- 
     let valueChart = [];
-  
 
-    
     mealList
     .filter(meal => selectedMonth === meal.date.split('-') .reverse() .join('-').split('-', 2).join('-'))
-   
     .map(
         meal => {     
         var totalCalo = meal.carb *4 + meal.fat *9  + meal.protein *4;
         if (!index[meal.date]) {
             index[meal.date] = {
               y: Number(totalCalo),
-              x: Number(meal.date.split("-",1))  - 1
-             
+              x: Number(meal.date.split("-",1))  - 1    
             };
           } else {
             index[meal.date].y =
             index[meal.date].y + Number(totalCalo);
           }
          } );
-
 
     Object.keys(index).forEach(key => {
       valueChart.push({
@@ -144,8 +131,6 @@ class MealLineChart extends React.Component {
           },
          
           valueChart,
-     
-    
     });
   };
 
@@ -156,14 +141,10 @@ class MealLineChart extends React.Component {
     } else {
       this.setState({...this.state, selectedEntry: JSON.stringify(entry)})
     }
-
-    // console.log("event.nativeEvent",event.nativeEvent)
   }
 
-  render() {
-      
+  render() { 
     return (
-     
         <View >
             <Text>Total calo in day</Text>
             <BarChart
@@ -180,7 +161,6 @@ class MealLineChart extends React.Component {
             onSelect={this.handleSelect.bind(this)}
             highlights={this.state.highlights}
             onChange={(event) => console.log(event.nativeEvent)}
-          
             yAxis={{ 
               left: { drawGridLines: false},
               right: { drawGridLines: false},
@@ -199,87 +179,14 @@ const mapStateToProps = state => {
     
     };
   };
-  export default connect(mapStateToProps, null)(MealLineChart);
+export default connect(mapStateToProps, null)(MealLineChart);
   
   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
     chart: {
       height:250
     },
-    // container: {
-    //   backgroundColor: "#FFF"
-    // },
-    headerText: {
-      fontWeight: 'bold',
-      justifyContent: 'center',
-    },
-    centeredView: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 22,
-    },
-    modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    },
-    openButton: {
-      backgroundColor: 'orange',
-      borderWidth: 3,
-      borderColor: '#222224',
-      borderColor: 5,
-      padding: 10,
-      elevation: 2,
-    },
-    textStyle: {
-      fontSize: 18,
-      // fontWeight: "bold",
-      textAlign: 'center',
-    },
-    modalText: {
-      marginBottom: 15,
-      textAlign: 'center',
-    },
-    datePicker: {
-      width: 300,
-    },
-    noteText: {
-      fontSize: 15,
-    },
-    text: {
-      fontSize: 20,
-      color: 'grey',
-    },
-    incomeText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: 'green',
-    },
-    expenseText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-  
-      color: 'red',
-    },
-    totalText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: 'orange',
-    },
+
+   
   });
   
 
