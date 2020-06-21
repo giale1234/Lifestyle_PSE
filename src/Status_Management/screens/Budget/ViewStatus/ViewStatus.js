@@ -1,6 +1,6 @@
 // props change does not re-render
 import React, { Component, PureComponent } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { connect } from 'react-redux';
 import {
@@ -39,10 +39,11 @@ class ViewStatus extends PureComponent {
     this.loadItems();
   }
 
-  loadItems = () => {
+  loadItems = (day) => {
     let { budgetList } = this.props;
     for (let i = -15; i < 85; i++) {
       var timestamp = Math.floor(Date.now());
+      console.log("timestamp",timestamp)
       const time = timestamp + i * 24 * 60 * 60 * 1000;
       const strTime = this.timeToString(time);
       this.state.items[strTime] = [];
@@ -100,7 +101,12 @@ class ViewStatus extends PureComponent {
     });
   };
 
-
+  renderEmptyDate = () =>{
+    return(
+      <View>
+      </View>
+    )
+  }
 
   renderItem = (item, firstItemInDay) => {
     return (
@@ -151,8 +157,9 @@ class ViewStatus extends PureComponent {
         {/* Agenda */}
         <Agenda
           items={this.state.items}
+          loadItemsForMonth={this.loadItems.bind(this)}
           renderItem={this.renderItem.bind(this)}
-          // renderEmptyDate={this.renderEmptyDate.bind(this)}
+          renderEmptyDate={this.renderEmptyDate.bind(this)}
           rowHasChanged={this.rowHasChanged.bind(this)}
         />
 

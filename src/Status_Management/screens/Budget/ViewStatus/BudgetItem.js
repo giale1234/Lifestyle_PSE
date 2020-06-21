@@ -74,7 +74,9 @@ class BudgetItem extends Component {
             key={item.id}
             rightOpenValue={-150}
             style={styles.swipeRow}
+            closeOnRowPress={true}
             disableRightSwipe={true}>
+              
             <View style={styles.rowBack}>
 
               {/* Edit button */}

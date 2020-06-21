@@ -7,6 +7,7 @@ import AppNavigation from './src/components/AppNavigation';
 /* Main function contains Navigator defined in components */
 export default class App extends React.Component {
   render() {
+    console.disableYellowBox = true;
     return <AppNavigation />;
   }
 }

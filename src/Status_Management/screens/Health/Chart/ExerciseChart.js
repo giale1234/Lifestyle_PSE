@@ -147,6 +147,7 @@ class ExerciseChart extends React.Component {
   
   }
   render() {
+    console.log("valueChart", this.state.valueChart)
     return (
       <Content padder>
         <View>
@@ -155,33 +156,35 @@ class ExerciseChart extends React.Component {
               EXERCISE
             </Text>
           </View>
+      
           <PieChart
-            style={styles.chart}
-            logEnabled={true}
-            chartBackgroundColor={processColor('white')}
-            chartDescription={this.state.description}
-            data={this.state.data}
-            legend={this.state.legend}
-            highlights={this.state.highlights}
-            entryLabelColor={processColor('green')}
-            entryLabelTextSize={15}
-            drawEntryLabels={true}
-            rotationEnabled={true}
-            usePercentValues={true}
-            styledCenterText={{
-              text: 'Pie center text!',
-              color: processColor('pink'),
-              size: 20,
-            }}
-            centerTextRadiusPercent={100}
-            holeRadius={40}
-            holeColor={processColor('#f0f0f0')}
-            transparentCircleRadius={45}
-            transparentCircleColor={processColor('#f0f0f088')}
-            onSelect={this.handleSelect.bind(this)}
-            onChange={event => console.log(event.nativeEvent)}
-            animation={this.state.animation}
-          />
+          style={styles.chart}
+          logEnabled={true}
+          chartBackgroundColor={processColor('white')}
+          chartDescription={this.state.description}
+          data={this.state.data}
+          legend={this.state.legend}
+          highlights={this.state.highlights}
+          entryLabelColor={processColor('green')}
+          entryLabelTextSize={15}
+          drawEntryLabels={true}
+          rotationEnabled={true}
+          usePercentValues={true}
+          styledCenterText={{
+            text: 'Exercise!',
+            color: processColor('pink'),
+            size: 20,
+          }}
+          centerTextRadiusPercent={100}
+          holeRadius={40}
+          holeColor={processColor('#f0f0f0')}
+          transparentCircleRadius={45}
+          transparentCircleColor={processColor('#f0f0f088')}
+          onSelect={this.handleSelect.bind(this)}
+          onChange={event => console.log(event.nativeEvent)}
+          animation={this.state.animation}
+        />
+         
         </View>
         <View
           style={styles.viewTotal}>

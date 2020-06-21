@@ -9,6 +9,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 var icon_home = './../../../../assets/homeTab_icon.png';
 var icon_add = './../../../../assets/addTab_icon.png';
 var icon_chart = './../../../../assets/chartTab_icon.png';
+
 /* Import screens */
 import AddStatus from './AddStatus/AddStatus';
 import ViewStatus from './ViewStatus/ViewStatus';

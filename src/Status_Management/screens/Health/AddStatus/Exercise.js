@@ -129,20 +129,25 @@ class Exercise extends Component {
         </Form>
         
          {/* DURATION INPUT */}
+         <View style={{flexDirection:"row",  marginTop: 30,marginLeft:30}}>
         <Label
-          style={styles.label}>
-          Duration (min):
+          style={styles.label}
+          >
+          Duration:
         </Label>
+        <Text style={{fontSize:20}}> {this.state.duration} min</Text>
+        </View>
         <Slider
           value={this.state.duration}
           onValueChange={value => this.setState({duration: value})}
           step={1}
           minimumValue={0}
           maximumValue={600}
-          thumbTintColor="#FE4365"
+          maximumTrackTintColor="#C1C1C1"
+          thumbTintColor="#F85C01"
           style={{margin: 10}}
         />
-        <Text style={{marginLeft: 30}}>Value: {this.state.duration} min</Text>
+       
 
 
            {/* CATEGORY PICKER */}
@@ -202,7 +207,7 @@ class Exercise extends Component {
               onPress={() => {
                 this.props.navigation.goBack(), this.props.deleteExerciseEdit();
               }}>
-              <Text>Close</Text>
+              <Text>CLOSE</Text>
             </Button>
           </View>
         ) : (
@@ -250,10 +255,10 @@ const styles = StyleSheet.create({
     color: '#fa8100',
     fontWeight: 'bold',
     fontSize: 20,
-    margin: 20,
-    marginTop: 30,
+  
+   
   },
-  categoryLabel:{color: 'grey', fontSize: 20, margin: 10},
+  categoryLabel:{color: '#fa8100',fontWeight:"bold", fontSize: 20, margin: 10, marginLeft:30},
   pickerBox:{borderColor: 'grey', borderWidth: 1, marginLeft: 15},
   viewbtnEdit: {
     flexDirection: 'row',

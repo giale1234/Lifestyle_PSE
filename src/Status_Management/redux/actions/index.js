@@ -56,3 +56,10 @@ export const actEditMeal = (meal)=> {
         meal
     }
 }
+//Water
+// export const actSubmitWater = (water) => {
+//     return{
+//         type: ActionType.SUBMIT_W,
+//         water
+//     }
+// }

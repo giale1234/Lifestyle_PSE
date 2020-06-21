@@ -128,6 +128,7 @@ class Meal extends Component {
         protein: 0,
         fat: 0,
         filePath: {},
+        isUpload: false
       })
     }
   };
@@ -222,10 +223,12 @@ class Meal extends Component {
 
 
         {/* NUTRITION INPUT */}
-        <Label style={styles.labelNutri}>
-          CARB (g):
-        </Label>
-
+        <View style={{flexDirection:"row",  marginTop: 30,}}>
+            <Label style={styles.labelNutri}>
+              CARB :
+            </Label>
+            <Text style={{fontSize:20}}> {this.state.carb} g</Text>
+        </View>
         <View style={styles.viewSlider}>
           <Slider
             value={this.state.carb}
@@ -233,16 +236,21 @@ class Meal extends Component {
             step={1}
             minimumValue={0}
             maximumValue={100}
-            maximumTrackTintColor="#FFD3B5"
-            thumbTintColor="#FE4365"
+            maximumTrackTintColor="#C1C1C1"
+            thumbTintColor="#F85C01"
             style={styles.slider}
           />
-          <Text>Value: {this.state.carb}</Text>
+          
         </View>
 
-        <Label style={styles.labelNutri}>
-          PROTEIN (g):
-        </Label>
+        <View style={{flexDirection:"row"}}>
+            <Label style={styles.labelNutri}>
+            PROTEIN:
+            </Label>
+            <Text style={{fontSize:20}}> {this.state.protein} g</Text>
+        </View>
+
+       
 
         <View style={styles.viewSlider}>
           <Slider
@@ -251,18 +259,21 @@ class Meal extends Component {
             step={1}
             minimumValue={0}
             maximumValue={100}
-            maximumTrackTintColor="#FFD3B5"
-            thumbTintColor="#FE4365"
+            maximumTrackTintColor="#C1C1C1"
+            thumbTintColor="#F85C01"
             style={styles.slider}
 
           />
-          <Text >Value: {this.state.protein}</Text>
+         
         </View>
 
 
-        <Label style={styles.labelNutri}>
-          FAT (g):
-        </Label>
+        <View style={{flexDirection:"row",}}>
+            <Label style={styles.labelNutri}>
+            FAT:
+            </Label>
+            <Text style={{fontSize:20}}> {this.state.fat} g</Text>
+        </View>
 
         <View style={styles.viewSlider}>
           <Slider
@@ -271,11 +282,10 @@ class Meal extends Component {
             step={1}
             minimumValue={0}
             maximumValue={100}
-            maximumTrackTintColor="#FFD3B5"
-            thumbTintColor="#FE4365"
+            maximumTrackTintColor="#C1C1C1"
+            thumbTintColor="#F85C01"
             style={styles.slider}
           />
-          <Text>Value: {this.state.fat}</Text>
         </View>
 
       {/* BUTTON FOR EDIT FORM */}  
@@ -294,7 +304,7 @@ class Meal extends Component {
               onPress={() => {
                 this.props.navigation.goBack(), this.props.deleteMealEdit();
               }}>
-              <Text>Close</Text>
+              <Text>CLOSE</Text>
             </Button>
           </View>
         ) : (
@@ -344,9 +354,21 @@ const styles = StyleSheet.create({
   datepicker:{width: 300, marginTop: 10},
   viewbtnUpload:{ flexDirection: "row", margin: 20, alignItems: "center" },
   btnUpload:{ borderColor: "grey", borderWidth: 1, borderRadius: 5, height: 35, width: 100, alignItems: "center", justifyContent: "center", marginLeft: 20 },
-  labelNutri:{ color: '#fa8100', fontWeight: "bold", fontSize: 20, margin: 20, marginTop: 30 },
+  labelNutri:{ color: '#fa8100', fontWeight: "bold", fontSize: 20, marginLeft:30},
   viewSlider:{ flex: 1, alignItems: 'stretch', justifyContent: 'center' },
-  slider:{ margin: 10 }
+  slider:{ margin: 10 },
+  viewbtnEdit: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  btnEdit: {
+    margin: 15,
+    marginTop: 50,
+  },
+  btnSubmit: {
+    margin: 15,
+    marginTop: 50,
+  },
 });
 
 

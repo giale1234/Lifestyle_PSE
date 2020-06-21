@@ -1,17 +1,5 @@
 import React, { Component } from "react";
 import {StyleSheet,Image} from 'react-native';
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Button,
-  Icon,
-  Left,
-  Right,
-  Body,
-  Text
-} from "native-base";
 
 /* React-navigation necessities import */
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -21,13 +9,12 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 var icon_home = './../../../../assets/homeTab_icon.png';
 var icon_add = './../../../../assets/addTab_icon.png';
 var icon_chart = './../../../../assets/chartTab_icon.png';
+
 /* Import screens */
 import AddStatus from './AddStatus/AddStatus';
 import ViewStatus from './ViewStatus/ViewStatus';
-
 import Chart from "./Chart/Chart";
-import Test from "./ViewStatus/Test";
-// import Test2 from "./ViewStatus/Test2"
+
 const Tab = createBottomTabNavigator();
 class Health extends Component {
   render() {
@@ -63,26 +50,7 @@ class Health extends Component {
             ),
           }}
         />
-       <Tab.Screen
-          name="Test"
-          component={Test}
-          options={{
-            tabBarLabel: 'TEST',
-            tabBarIcon: () => (
-              <Image source={require(icon_chart)} style={styles.iconStyle} />
-            ),
-          }}
-        />
-         {/* <Tab.Screen
-          name="Test2"
-          component={Test2}
-          options={{
-            tabBarLabel: 'TEST2',
-            tabBarIcon: () => (
-              <Image source={require(icon_chart)} style={styles.iconStyle} />
-            ),
-          }}
-        /> */}
+       
       </Tab.Navigator>
     );
   }

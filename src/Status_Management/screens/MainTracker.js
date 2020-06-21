@@ -1,20 +1,12 @@
 import React, {Component} from 'react';
-import {
-  View,
-  StyleSheet,
-  Platform,
-  ImageBackground,
-  StatusBar,
-} from 'react-native';
+import {StyleSheet, ImageBackground} from 'react-native';
 import {
   Container,
   Header,
   Title,
-  Content,
   Button,
   Icon,
   Left,
-  Right,
   Body,
   Text,
 } from 'native-base';
@@ -28,35 +20,37 @@ class MainTracker extends Component {
   render() {
     return (
       <Container style={styles.container}>
-         <Header>
-              <Left style = {{flex: 1}}>
-                <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                  <Icon name="menu" />
-                </Button>
-              </Left>
 
-              <Body style = {{flex: 1}}>
-                <Title style={styles.headerText}>Tracker</Title>
-              </Body>
-           
-            </Header>
+        <Header>
+          <Left style={{flex: 1}}>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.openDrawer()}>
+              <Icon name="menu" />
+            </Button>
+          </Left>
+
+          <Body style={{flex: 1}}>
+            <Title style={styles.headerText}>Tracker</Title>
+          </Body>
+        </Header>
+
         <ImageBackground source={budgetBackground} style={styles.imagebg}>
           <TouchableOpacity
-           style={styles.btn}
-            onPress={() =>
-              this.props.navigation.navigate('Budget')
-            }>
-               <Text style={styles.text}>BUDGET</Text>
-            </TouchableOpacity>
+            style={styles.btn}
+            onPress={() => this.props.navigation.navigate('Budget')}>
+            <Text style={styles.text}>BUDGET</Text>
+          </TouchableOpacity>
         </ImageBackground>
 
         <ImageBackground source={healthBackground} style={styles.imagebg}>
           <TouchableOpacity
             style={styles.btn}
             onPress={() => this.props.navigation.navigate('Health')}>
-            <Text  style={styles.text}>HEALTH</Text>
+            <Text style={styles.text}>HEALTH</Text>
           </TouchableOpacity>
         </ImageBackground>
+
       </Container>
     );
   }
@@ -70,20 +64,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     justifyContent: 'center',
   },
-  imagebg:{
-    flex: 1,   justifyContent: 'center',alignItems: 'center'
+  imagebg: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  btn:{
+  btn: {
     backgroundColor: 'white',
     height: 100,
     width: 200,
-    justifyContent: 'center',alignItems: 'center',
-    borderColor:"orange",
-    borderWidth:5
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'orange',
+    borderWidth: 5,
   },
-  text:{
-    color: 'purple', fontWeight: 'bold',fontSize:25
-  }
-
+  text: {
+    color: 'purple',
+    fontWeight: 'bold',
+    fontSize: 25,
+  },
 });
+
 export default MainTracker;

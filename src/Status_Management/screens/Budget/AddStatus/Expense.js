@@ -219,6 +219,7 @@ class Expense extends Component {
             data={DATA}
             renderItem={({item}) => (
               <TouchableOpacity
+              key={item.id}
                 onPress={() =>
                   this.setState({
                     category: item.title,
@@ -260,7 +261,7 @@ class Expense extends Component {
               onPress={() => {
                 this.props.navigation.goBack(), this.props.deleteBudgetEdit();
               }}>
-              <Text>Close</Text>
+              <Text>CLOSE</Text>
             </Button>
           </View>
         ) : (

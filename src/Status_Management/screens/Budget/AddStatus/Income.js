@@ -209,6 +209,7 @@ class Income extends Component {
             data={DATA}
             renderItem={({item}) => (
               <TouchableOpacity
+              key={item.id}
                 onPress={() =>
                   this.setState({
                     category: item.title,
@@ -251,7 +252,7 @@ class Income extends Component {
               onPress={() => {
                 this.props.navigation.goBack(), this.props.deleteBudgetEdit();
               }}>
-              <Text>Close</Text>
+              <Text>CLOSE</Text>
             </Button>
           </View>
         ) : (

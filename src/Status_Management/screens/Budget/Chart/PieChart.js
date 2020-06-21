@@ -79,6 +79,7 @@ class Chart extends React.Component {
     let valueChartExpense = [];
 
     budgetList.map(budget => {
+      // <View key={budget.id}></View>
       if (
         selectedMonth ===
         budget.date
@@ -120,7 +121,9 @@ class Chart extends React.Component {
         label: indexIncome[key].label,
         categoryImage: indexIncome[key].categoryImage,
       });
-    });
+    }
+    
+    );
     Object.keys(indexExpense).forEach(key => {
       valueChartExpense.push({
         value: indexExpense[key].value,

@@ -78,6 +78,7 @@ class LineChart extends React.Component {
     let valueChartExpense = [];
 
     budgetList.map(budget => {
+      // <View key={budget.id}></View>
       if (
         selectedMonth ===
         budget.date
@@ -90,6 +91,7 @@ class LineChart extends React.Component {
         // income data
         if (budget.type === 'Income') {
           if (!indexIncome[budget.date]) {
+           
             indexIncome[budget.date] = {
               y: Number(budget.amount),
               x: Number(budget.date.split('-', 1)) - 1,
@@ -169,7 +171,7 @@ class LineChart extends React.Component {
               : 'Expense a day in month'}
           </Text>
         </View>
-
+      
         <BarChart
           style={styles.chart}
           data={
