@@ -17,7 +17,6 @@ import {
 import { Agenda } from 'react-native-calendars';
 import moment from 'moment';
 import Item from './BudgetItem'
-// import AsyncStorage from '@react-native-community/async-storage';
 
 class ViewStatus extends PureComponent {
   constructor(props) {

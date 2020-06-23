@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     borderColor: 5,
     padding: 10,
     elevation: 2,
+    alignItems:"center"
   },
   textStyle: {
     fontSize: 18,

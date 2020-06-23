@@ -4,7 +4,6 @@ import * as ActionType from "./../constants/ActionType";
 let initialState = {
     mealList: [],
     mealEdit: "",
-    // waterList:[]
   };
 
   const mealReducer = (state = initialState, action) => {
@@ -25,6 +24,8 @@ let initialState = {
             //ADD
           let mealAdd = { ...action.meal , id: Math.random()};
           state.mealList = [...state.mealList, mealAdd];
+
+        
           }
         return { ...state };
   
@@ -44,12 +45,7 @@ let initialState = {
       }
       
       return { ...state };
-      
-      // case ActionType.SUBMIT_W:
-      //     let waterAdd = { ...action.water , id: Math.random()};
-      //     state.waterList = [...state.waterList, waterAdd];
-
-      //     return { ...state };
+    
 
       default:
         return { ...state };

@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, Image, Input } from 'react-native';
+import { View, Text, StyleSheet, Image, Input , TouchableHighlight} from 'react-native';
 import { TouchableOpacity, ScrollView, TextInput } from 'react-native-gesture-handler';
 import moment from 'moment';
 import * as actions from "../../../redux/actions"
@@ -48,7 +48,7 @@ class ViewStatus extends Component {
 
 
   render() {
-    const { exerciseList, mealList } = this.props;
+    const { exerciseList, mealList , budgetList} = this.props;
     var totalTime = 0;
     var totalCarb = 0;
     var totalProtein = 0;
@@ -124,15 +124,16 @@ class ViewStatus extends Component {
           </Text>
         </View>
 
+        {/* Chưa xong */}
         {/* //Weight - Height */}
         <TouchableOpacity style={styles.viewWH} onPress={this.toggleOverlay}>
           <View style={{ flexDirection: 'row', marginTop:10 }}>
             <Text style={styles.WHtitle}>Weight:</Text>
-            <Text style={styles.WHvalue}>{this.state.weight} kg</Text>
+            <Text style={styles.WHvalue}>48 kg</Text>
           </View>
           <View style={{ flexDirection: 'row', marginTop:10 }}>
             <Text style={styles.WHtitle}>Height:</Text>
-            <Text style={styles.WHvalue}>{this.state.height} cm</Text>
+            <Text style={styles.WHvalue}>168cm</Text>
           </View>
         </TouchableOpacity>
      
@@ -140,7 +141,7 @@ class ViewStatus extends Component {
         <ScrollView style={{ flex: 1 }}>
 
           {/* WATER */}
-
+          {/* Chưa xong */}
           <View style={styles.viewTitle}>
             <Text style={styles.textTitle}>WATER</Text>
             <View style={styles.viewValueTotal}>
@@ -215,76 +216,10 @@ class ViewStatus extends Component {
             <Text style={styles.totalText}>{totalFat}</Text>
           </View>
 
-          <SwipeListView
-            useFlatList
-            data={mealList}
-            renderItem={ (data, rowMap) => (
-                <View style={styles.rowFront}>
-                    <TouchableOpacity
-                key={data.item.id}
-                  // onPress={() => this.props.deleteMeal(meal)}
-                  // onPress={() => {
-                  //   this.props.editMeal(meal);
-                  //   this.props.navigation.push('Meal');
-                  // }}
-                  >
-                  <View style={styles.viewItemRow}>
-                    <View style={{ height: 40, width: 40 }}>
-                      <Image source={data.item.filePath} style={styles.imageFood} />
-                    </View>
-
-                    <View style={{ width: 120 }}>
-                      <Text numberOfLines={1} style={{ fontSize: 20 }}>
-                        {data.item.name}
-                      </Text>
-                    </View>
-
-                    <View style={styles.viewCircle}>
-                      <View style={styles.colorCircleCarb} />
-                      <Text style={{ fontSize: 15 }}>{data.item.carb}</Text>
-                    </View>
-                    <View style={styles.viewCircle}>
-                      <View style={styles.colorCirclePro} />
-                      <Text style={{ fontSize: 15 }}>{data.item.protein}</Text>
-                    </View>
-                    <View style={styles.viewCircle}>
-                      <View style={styles.colorCircleFat} />
-                      <Text style={{ fontSize: 15 }}>{data.item.fat}</Text>
-                    </View>
-
-                    <Text style={styles.valueCalo}>
-                      {calCalo(data.item.carb, data.item.protein, data.item.fat)}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                </View>
-            )}
-            renderHiddenItem={ (data, rowMap) => (
-                <View style={styles.rowBack}>
-                     <TouchableOpacity
-                style={[styles.backRightBtn, styles.backRightBtnLeft]}
-                onPress={() => {
-                    this.props.editMeal(data.item);
-                    this.props.navigation.push('Meal');
-                  }}
-                >
-                <Text style={styles.backTextWhite}>Edit</Text>
-              </TouchableOpacity>
-
-              {/* Delete button */}
-              <TouchableOpacity
-                style={[styles.backRightBtn, styles.backRightBtnRight]}
-               onPress={() => this.props.deleteMeal(data.item)}
-                >
-                <Text style={styles.backTextWhite}>Delete</Text>
-              </TouchableOpacity>
-                </View>
-            )}
-            leftOpenValue={75}
-            rightOpenValue={-75}
-        />
+          
           {/*  Row Item  */}
-          {/* {mealList
+          {/* Chưa có btn edit delete */}
+          {mealList
             .filter(meal => meal.date === this.state.date)
             .map(meal => {
               return (
@@ -325,7 +260,10 @@ class ViewStatus extends Component {
                   </View>
                 </TouchableOpacity>
               );
-            })} */}
+            })}
+
+      
+    
 
           {/* EXERCISE */}
 
@@ -346,6 +284,7 @@ class ViewStatus extends Component {
           </View>
 
           {/*  Row Item  */}
+          {/* Chưa có btn edit delete */}
           {exerciseList
             .filter(exercise => exercise.date === this.state.date)
             .map(exercise => {
@@ -403,7 +342,9 @@ const mapStateToProps = state => {
   return {
     exerciseList: state.exerciseReducer.exerciseList,
     mealList: state.mealReducer.mealList,
-    waterList: state.mealReducer.waterList
+    waterList: state.mealReducer.waterList,
+
+    budgetList: state.budgetReducer.budgetList,
   };
 };
 export default connect(mapStateToProps, mapDisaptchToProps)(ViewStatus);
@@ -570,45 +511,5 @@ const styles = StyleSheet.create({
   },
   WHvalue: { fontSize: 23, fontWeight: 'bold', color: 'black' },
   bottle: { margin: 5 },
-  rowFront: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderColor: 'grey',
-    borderWidth: 0.7,
-    justifyContent: 'center',
-    height: 60,
-    flexDirection: 'row',
-  },
-  rowBack: {
-    alignItems: 'center',
-    backgroundColor: '#F1F4F5',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: 75,
-  },
-  backRightBtnLeft: {
-    backgroundColor: '#FDC02E',
-    right: 75,
-  },
-  backRightBtnRight: {
-    backgroundColor: '#D93649',
-    right: 0,
-  },
-  swipeRow: {
-    width: 320,
-    margin: 2,
-    elevation: 6,
-    borderRadius: 28,
-    marginBottom: 3,
-    backgroundColor: 'rgba(231,76,60,1)',
-  },
+  
 });
