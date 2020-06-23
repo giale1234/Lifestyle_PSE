@@ -12,7 +12,7 @@ let initialState = {
 
       case ActionType.SUBMIT:
         if (action.budget.id) {
-          //UPDATE
+          //UPDATE EDIT
           let index = state.budgetList.findIndex(budget => {
             return budget.id === action.budget.id;
           });

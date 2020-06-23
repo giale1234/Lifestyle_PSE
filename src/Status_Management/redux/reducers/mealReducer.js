@@ -3,7 +3,7 @@ import * as ActionType from "./../constants/ActionType";
 
 let initialState = {
     mealList: [],
-    mealEdit: "",
+    mealEdit: null,
   };
 
   const mealReducer = (state = initialState, action) => {
@@ -11,7 +11,7 @@ let initialState = {
    
       case ActionType.SUBMIT_M:
         if (action.meal.id) {
-          //UPDATE
+          //UPDATE EDIT
           let index = state.mealList.findIndex(meal => {
             return meal.id === action.meal.id;
           });

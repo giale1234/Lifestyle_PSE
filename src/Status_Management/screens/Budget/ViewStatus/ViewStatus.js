@@ -24,6 +24,7 @@ class ViewStatus extends PureComponent {
     this.state = {
       items: {},
       currentMonth: moment().format('YYYY-MM'),
+      dayAgenda: {}
     };
 
   }
@@ -34,15 +35,14 @@ class ViewStatus extends PureComponent {
     }
   }
 
-  componentDidMount() {
-    this.loadItems();
-  }
-
   loadItems = (day) => {
+    console.log("loadItems")
     let { budgetList } = this.props;
     for (let i = -15; i < 85; i++) {
       var timestamp = Math.floor(Date.now());
-      console.log("timestamp",timestamp)
+      if(day){
+        timestamp = day.timestamp
+      }
       const time = timestamp + i * 24 * 60 * 60 * 1000;
       const strTime = this.timeToString(time);
       this.state.items[strTime] = [];

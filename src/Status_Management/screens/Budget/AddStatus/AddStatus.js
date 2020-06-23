@@ -38,6 +38,7 @@ class AddStatus extends Component {
     const {selectedIndex} = this.state;
     return (
       <View style={styles.container}>
+        {/* Header */}
         <Header>
           <Left style={{flex: 1}}>
             <Button

@@ -103,6 +103,7 @@ class Expense extends Component {
       [name]: text,
     });
   };
+
   handleOnSubmit = () => {
     if (this.state.amount === '') {
       alert('Amount must not be empty !!!');
@@ -110,6 +111,7 @@ class Expense extends Component {
       alert('Please choose category !!!');
     } else {
       var currentDate = moment().format('DD-MM-YYYY');
+      
       this.props.onSubmit(this.state);
       //Reset form when submit
       this.setState({
@@ -193,6 +195,7 @@ class Expense extends Component {
           </Item>
         </Form>
 
+          
         {/* AMOUNT INPUT */}
         <Form>
           <Item stackedLabel>
@@ -204,6 +207,7 @@ class Expense extends Component {
                 placeholder="Enter the income here..."
                 onChangeText={text => this.handleOnChange(text, 'amount')}
                 value={this.state.amount}
+
               />
             </Item>
           </Item>

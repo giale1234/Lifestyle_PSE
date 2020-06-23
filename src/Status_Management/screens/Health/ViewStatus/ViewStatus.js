@@ -11,30 +11,7 @@ import {SwipeRow, SwipeListView} from 'react-native-swipe-list-view';
 const waterGlass_active = require('../../../../../assets/waterBottle_on.png');
 const waterGlass_inactive = require('../../../../../assets/waterBottle.off.png');
 
-// const OverlayExample = () => {
-//   const [visible, setVisible] = useState(false);
-//   const [weight, setWeight] = useState(0);
-//   const [height, setHeight] = useState(0);
-//   const toggleOverlay = () => {
-//     setVisible(!visible);
-//   };
 
-//   return (
-//     <View>
-//       <TouchableOpacity style={styles.viewWH} onPress={toggleOverlay}>
-//           <View style={{ flexDirection: 'row', marginTop:10 }}>
-//             <Text style={styles.WHtitle}>Weight:</Text>
-//             <Text style={styles.WHvalue}>{weight} kg</Text>
-//           </View>
-//           <View style={{ flexDirection: 'row', marginTop:10 }}>
-//             <Text style={styles.WHtitle}>Height:</Text>
-//             <Text style={styles.WHvalue}>{height} cm</Text>
-//           </View>
-//         </TouchableOpacity>
-
-//     </View>
-//   );
-// };
 class ViewStatus extends Component {
   constructor(props) {
     super(props);
@@ -124,8 +101,9 @@ class ViewStatus extends Component {
           </Text>
         </View>
 
-        {/* Chưa xong */}
+       
         {/* //Weight - Height */}
+         {/* Chưa xong */}
         <TouchableOpacity style={styles.viewWH} onPress={this.toggleOverlay}>
           <View style={{ flexDirection: 'row', marginTop:10 }}>
             <Text style={styles.WHtitle}>Weight:</Text>
@@ -343,8 +321,6 @@ const mapStateToProps = state => {
     exerciseList: state.exerciseReducer.exerciseList,
     mealList: state.mealReducer.mealList,
     waterList: state.mealReducer.waterList,
-
-    budgetList: state.budgetReducer.budgetList,
   };
 };
 export default connect(mapStateToProps, mapDisaptchToProps)(ViewStatus);

@@ -11,7 +11,7 @@ let initialState = {
    
       case ActionType.SUBMIT_E:
         if (action.exercise.id) {
-          //UPDATE
+          //UPDATE EDIT
           let index = state.exerciseList.findIndex(exercise => {
             return exercise.id === action.exercise.id;
           });

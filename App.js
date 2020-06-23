@@ -10,7 +10,7 @@ export default class App extends React.Component {
 
     // Lỗi thư viện react-native-modern-datepicker => change 
     // Lỗi list in scrollview  =>fix
-    // console.disableYellowBox = true;
+    console.disableYellowBox = true;
 
     
     return <AppNavigation />;
